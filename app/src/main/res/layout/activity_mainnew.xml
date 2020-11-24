@@ -2,12 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background=""
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/mainAppName"
+        style="@style/textViewStyleDefault"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -17,11 +19,12 @@
         android:text="@string/app_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="AppName" />
+        tools:text="Buchverwaltung"
+        />
 
     <ImageButton
         android:id="@+id/mainPlusButton"
-        style="@style/ButtonStyleDefault"
+        style="@style/buttonStyleDefault"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -54,5 +57,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mainFilterButton"
         app:spanCount="1"
-        tools:listitem="@layout/item_books" />
+        tools:listitem="@layout/item_mainbooks" />
 </androidx.constraintlayout.widget.ConstraintLayout>
