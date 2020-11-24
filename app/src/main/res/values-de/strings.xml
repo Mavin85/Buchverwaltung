@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Buchverwaltung</string>
+
+    <string name="mainPlusButtonText">+</string>
 </resources>
