@@ -22,7 +22,7 @@
             android:id="@+id/mainFilterIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_filters"
+            android:src="@drawable/ic_round_filter_list_36"
             app:tint="@color/colorTextIcons"
             />
 
@@ -44,7 +44,7 @@
             android:id="@+id/mainAddIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_add_24"
+            android:src="@drawable/ic_baseline_add_36"
             app:tint="@color/colorTextIcons"
             />
     </LinearLayout>
