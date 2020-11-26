@@ -13,15 +13,18 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    /*
     Button btnAdd, btnView;
     EditText title, isbn;
     ListView bookList;
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*
         btnAdd = findViewById(R.id.btnAdd);
         btnView = findViewById(R.id.btnView);
         title = findViewById(R.id.bookTitle);
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 book = new Book(title.getText().toString(), isbn.getText().toString());
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
                 dataBaseHelper.addBook(book);
+                Toast.makeText(MainActivity.this, "creating book", Toast.LENGTH_LONG).show();
             }
             catch(Exception e) {
                 Toast.makeText(MainActivity.this, "Error creating book", Toast.LENGTH_LONG).show();
@@ -47,5 +51,6 @@ public class MainActivity extends AppCompatActivity {
             List<Book> allBooks = dataBaseHelper.getBorrowedBooks();
             Toast.makeText(MainActivity.this, allBooks.toString(), Toast.LENGTH_LONG).show();
         });
+        */
     }
 }

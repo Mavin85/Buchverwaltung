@@ -96,6 +96,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    // removes a borrowing process from the db
+    public void remBorrowingProcess(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.delete(BORROWING_PROCESS, "WHERE borrowing_id = " + id, null);
+        }
+        catch(Exception e) {
+            Log.e("addBorrowingProcess", e.getMessage());
+        }
+    }
+
     // read
 
     // returns a list of books that are results of the query
