@@ -29,28 +29,22 @@ public class MainActivity extends AppCompatActivity {
         bookList = findViewById(R.id.bookList);
 
         btnAdd.setOnClickListener(v -> {
-
             Book book = null;
-
             try {
                 book = new Book(title.getText().toString(), isbn.getText().toString());
+                DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
+                dataBaseHelper.addBook(book);
             }
             catch(Exception e) {
                 Toast.makeText(MainActivity.this, "Error creating book", Toast.LENGTH_LONG).show();
             }
-
-            DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
-
-            assert book != null;
-            boolean success = dataBaseHelper.addBook(book);
-
-            //Toast.makeText(MainActivity.this, "success= " + success, Toast.LENGTH_LONG).show();
         });
 
         btnView.setOnClickListener(v -> {
             DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
-            List<Book> allBooks = dataBaseHelper.getAllBooks();
-
+            //List<Book> allBooks = dataBaseHelper.getAllBooks();
+            //List<Book> allBooks = dataBaseHelper.getFavouriteBooks();
+            List<Book> allBooks = dataBaseHelper.getBorrowedBooks();
             Toast.makeText(MainActivity.this, allBooks.toString(), Toast.LENGTH_LONG).show();
         });
     }
