@@ -1,14 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-
     <!-- Base application theme. -->
     <style name="Theme.Buchverwaltung" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="textViewStyleDefault">
+
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
@@ -19,14 +21,17 @@
 
     </style>
 
-
     <style name="buttonStyleDefault">
+
         <item name="android:gravity">center</item>
         <item name="android:textSize">20sp</item>
-    </style>
 
+    </style>
 
     <style name="recyclerViewStyleDefault">
+
         <item name="android:padding">5dp</item>
+
     </style>
+
 </resources>
