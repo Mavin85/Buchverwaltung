@@ -2,9 +2,12 @@
 <resources>
     <color name="colorPrimary">#4F9A94</color>
     <color name="colorPrimaryDark">#4F9A94</color>
-    <color name="colorAccent">#AD1457</color>
+    <color name="colorAccent">#FDA14F</color>
     <color name="colorTextIcons">#37006a</color>
     <color name="colorTextPrimary">#FFFFFF</color>
     <color name="colorTextSecondary">#757575</color>
     <color name="colorBackground">#131313</color>
+
+    <color name="colorRatingActive">@color/colorAccent</color>
+    <color name="colorRatingInactive">@color/colorTextPrimary</color>
 </resources>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp"
+    android:animateLayoutChanges="true"
+    android:background="@color/colorBackground"
+    tools:context=".DetailActivityBook">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/detailBookGuidelineVertical50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.5"
+        android:orientation="vertical"
+        />
+    <View
+        android:id="@+id/detailBookSupporterView1"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        app:layout_constraintTop_toBottomOf="@id/detailBookCover"
+        />
+
+    <View
+        android:id="@+id/detailBookBackgroundView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/mainbooks_background"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/detailBookSupporterView1"
+        app:layout_constraintTop_toTopOf="@id/detailBookTitle"
+        />
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/detailBookCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintWidth_percent="0.275"
+        app:layout_constraintDimensionRatio="11:15.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_corner_radius="6dp"
+        tools:src="@drawable/bookexamplecover"
+        />
+
+    <TextView
+        android:id="@+id/detailBookTitle"
+        style="@style/textViewStyleDefault"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="10dp"
+        android:paddingTop="15dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detailBookCover"
+        app:layout_constraintTop_toTopOf="@id/detailBookCover"
+        tools:text="Harry Potter und die Kammer des Schreckens"
+        />
+
+    <TextView
+        android:id="@+id/detailBookAuthor"
+        style="@style/textViewStyleDefault"
+        android:layout_width="0dp"
+        android:gravity="right"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintStart_toEndOf="@id/detailBookCover"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detailBookTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Joanne K. Rowling"
+        />
+
+    <ImageView
+        android:id="@+id/detailBookFavorite"
+        style="@style/FavoriteStar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_star_36"
+        android:gravity="right"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detailBookAuthor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/colorRatingInactive"
+        />
+
+    <View
+        android:id="@+id/detailBookSupporterView2"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        app:layout_constraintTop_toBottomOf="@id/detailBookComment"
+        />
+
+    <View
+        android:id="@+id/detailBookBackgroundView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/mainbooks_background"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/detailBookSupporterView2"
+        app:layout_constraintTop_toBottomOf="@id/detailBookBackgroundView1"
+        />
+
+    <TextView
+        android:id="@+id/detailBookIsbnIdentifier"
+        style="@style/textViewStyleDefault"
+        android:layout_width="0dp"
+        android:gravity="left"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/detailBookIsbnIdentifier"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/detailBookBackgroundView2"
+        tools:text="ISBN: "
+        />
+
+    <TextView
+        android:id="@+id/detailBookIsbn"
+        style="@style/textViewStyleDefault"
+        android:layout_width="0dp"
+        android:gravity="left"
+        app:layout_constraintTop_toTopOf="@id/detailBookIsbnIdentifier"
+        app:layout_constraintStart_toEndOf="@id/detailBookIsbnIdentifier"
+        tools:text="8465-4564-gh546"
+        />
+
+    <TextView
+        android:id="@+id/detailBookCommentIdentifier"
+        style="@style/textViewStyleDefault"
+        android:layout_width="0dp"
+        android:gravity="left"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/detailBookCommentIdentifier"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detailBookIsbnIdentifier"
+        tools:text="Comment: "
+        />
+
+    <TextView
+        android:id="@+id/detailBookComment"
+        style="@style/textViewStyleDefault"
+        android:layout_width="0dp"
+        android:gravity="left"
+        android:layout_marginEnd="10dp"
+        android:maxLines="3"
+        android:ellipsize="end"
+        app:layout_constraintTop_toTopOf="@id/detailBookCommentIdentifier"
+        app:layout_constraintStart_toEndOf="@id/detailBookCommentIdentifier"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Dies ist ein Beispielskommentar, diese können zum Teil etwas lnger sein, deshalb muss man schauen, dass das alles richtig formatiert ist und so, ein echter rotz ist das. Aber gut, so muss das halt sein, sonst passieren blöde formattierungsfehler"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/detailBookRecyclerViewLendings"
+        style="@style/recyclerViewStyleDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detailBookBackgroundView2"
+        app:layout_constraintBottom_toTopOf="@id/detailBookButtonDelete"
+        tools:listitem="@layout/item_detailbookslendings"
+        />
+
+
+
+
+    <Button
+        android:id="@+id/detailBookButtonDelete"
+        style="@style/buttonStyleDefault"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/detailBookButtonDelete"
+        app:layout_constraintWidth_percent="0.45"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/detailBookGuidelineVertical50"
+        />
+
+    <Button
+        android:id="@+id/detailBookButtonLending"
+        style="@style/buttonStyleDefault"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/detailBookButtonLending"
+        app:layout_constraintWidth_percent="0.45"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detailBookGuidelineVertical50"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,6 +25,10 @@
 
         <item name="android:gravity">center</item>
         <item name="android:textSize">20sp</item>
+        <item name="maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="backgroundColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorTextIcons</item>
 
     </style>
 
@@ -34,4 +38,10 @@
 
     </style>
 
+    <style name="FavoriteStar" parent="Theme.Buchverwaltung">
+
+        <item name="colorControlActivated">@color/colorRatingActive</item>
+        <item name="colorControlNormal">@color/colorRatingInactive</item>
+
+    </style>
 </resources>

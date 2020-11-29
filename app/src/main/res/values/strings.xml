@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Book management</string>
 
+    <string name="detailBookIsbnIdentifier">ISBN: </string>
+    <string name="detailBookCommentIdentifier">Comment: </string>
+    <string name="detailBookButtonDelete">delete</string>
+    <string name="detailBookButtonLending">lend</string>
 
 </resources>
