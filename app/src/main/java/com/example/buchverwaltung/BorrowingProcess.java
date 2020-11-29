@@ -20,6 +20,19 @@ public class BorrowingProcess {
         this.comment = comment;
     }
 
+    @Override
+    public String toString() {
+        return "BorrowingProcess{" +
+                "id=" + id +
+                ", book_id=" + book_id +
+                ", borrower='" + borrower + '\'' +
+                ", beginning='" + beginning + '\'' +
+                ", ending='" + ending + '\'' +
+                ", completed=" + completed +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
+
     public int getId() {
         return id;
     }

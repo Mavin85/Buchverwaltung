@@ -49,9 +49,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     // upgrades the db if a new version of the app is installed
+    // currently all the stored data will be lost after upgrade
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.e("Upgrade", "Updating tables");
 
+        db.execSQL("DROP TABLE IF EXISTS " + BOOK);
+        db.execSQL("DROP TABLE IF EXISTS " + BORROWING_PROCESS);
+        onCreate(db);
     }
 
     // write
@@ -76,6 +81,54 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    // edits a book
+    public void editBook(Book book) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int bookId = book.getId();
+        ContentValues values = new ContentValues();
+        values.put("isbn", book.getIsbn());
+        values.put("title", book.getTitle());
+        values.put("author", book.getAuthor());
+        values.put("cover", book.getCover());
+        values.put("favourite", book.isFavourite() ? 1 : 0);
+        values.put("comment_book", book.getComment());
+
+        try {
+            db.update("Book", values, "book_id = " + bookId, null);
+        }
+        catch(Exception e) {
+            Log.e("editBook", e.getMessage());
+        }
+    }
+
+    // removes a book from the db
+    public void remBook(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // first delete all borrowing processes of the book
+        Cursor cursor = db.rawQuery("SELECT * FROM BORROWING_PROCESS WHERE book_id = " + id + " ORDER BY borrowing_id desc;", null);
+        try {
+            if(cursor.moveToFirst()) {
+                do {
+                    remBorrowingProcess(cursor.getInt(cursor.getColumnIndex("borrowing_id")));
+                } while (cursor.moveToNext());
+            }
+        }
+        catch(Exception e) {
+            Log.e("remBook,remBoPo", e.getMessage());
+        }
+        cursor.close();
+
+        // delete the book
+        try {
+            db.delete("Book", "book_id = " + id, null);
+        }
+        catch(Exception e) {
+            Log.e("remBook", e.getMessage());
+        }
+    }
+
     // adds a borrowing process to the db
     public void addBorrowingProcess(BorrowingProcess proc) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -96,15 +149,36 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    // edits a borrowing process
+    public void editBorrowingProcess(BorrowingProcess proc) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int procId = proc.getId();
+        ContentValues values = new ContentValues();
+        values.put("book_id", proc.getBook_id());
+        values.put("borrower", proc.getBorrower());
+        values.put("beginning", proc.getBeginning());
+        values.put("ending", proc.getEnding());
+        values.put("completed", proc.isCompleted() ? 1 : 0);
+        values.put("comment_borrowing", proc.getComment());
+
+        try {
+            db.update("Borrowing_Process", values, "borrowing_id = " + procId, null);
+        }
+        catch(Exception e) {
+            Log.e("editBorrowingProcess", e.getMessage());
+        }
+    }
+
     // removes a borrowing process from the db
     public void remBorrowingProcess(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
-            db.delete(BORROWING_PROCESS, "WHERE borrowing_id = " + id, null);
+            db.delete(BORROWING_PROCESS, "borrowing_id = " + id, null);
         }
         catch(Exception e) {
-            Log.e("addBorrowingProcess", e.getMessage());
+            Log.e("remBorrowingProcess", e.getMessage());
         }
     }
 
@@ -137,7 +211,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
         return bookList;
     }
 
@@ -156,5 +229,32 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return getBooks("SELECT * FROM Borrowing_Process b LEFT JOIN Book bo ON bo.book_id = b.book_id where completed = 0;");
     }
 
+    // returns borrowing processes for one book
+    public List<BorrowingProcess> getBorrowProcesses(int bookId) {
+        List<BorrowingProcess> borrowList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM BORROWING_PROCESS WHERE book_id = " + bookId + " ORDER BY borrowing_id desc;", null);
 
+        try {
+            if(cursor.moveToFirst()) {
+                do {
+                    int borrowId = cursor.getInt(cursor.getColumnIndex("borrowing_id"));
+                    String borrower = cursor.getString(cursor.getColumnIndex("borrower"));
+                    String beginning = cursor.getString(cursor.getColumnIndex("beginning"));
+                    String ending = cursor.getString(cursor.getColumnIndex("ending"));
+                    boolean completed = cursor.getInt(cursor.getColumnIndex("completed")) == 1;
+                    String comment_borrowing = cursor.getString(cursor.getColumnIndex("comment_borrowing"));
+
+                    BorrowingProcess newBoPo = new BorrowingProcess(borrowId, bookId, borrower, beginning, ending, completed, comment_borrowing);
+                    borrowList.add(newBoPo);
+                } while (cursor.moveToNext());
+            }
+        }
+        catch(Exception e) {
+            Log.e("getBorrowProcesses", e.getMessage());
+        }
+
+        cursor.close();
+        return borrowList;
+    }
 }
