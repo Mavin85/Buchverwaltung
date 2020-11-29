@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -70,7 +69,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(TITLE, book.getTitle());
         cv.put(AUTHOR, book.getAuthor());
         cv.put(FAVOURITE, book.isFavourite() ? 1 : 0);
-        cv.put(COVER, book.getCover());
+        cv.put(COVER, book.getCoverString());
         cv.put(COMMENT_BOOK, book.getComment());
 
         try {
@@ -90,7 +89,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put("isbn", book.getIsbn());
         values.put("title", book.getTitle());
         values.put("author", book.getAuthor());
-        values.put("cover", book.getCover());
+        values.put("cover", book.getCoverString());
         values.put("favourite", book.isFavourite() ? 1 : 0);
         values.put("comment_book", book.getComment());
 
