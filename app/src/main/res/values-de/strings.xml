@@ -5,5 +5,6 @@
     <string name="detailBookCommentIdentifier">Kommentar: </string>
     <string name="detailBookButtonDelete">löschen</string>
     <string name="detailBookButtonLending">verleihen</string>
+    <string name="detailBooksLendingPlannedTimeIdentifier">geplant zurück</string>
 
 </resources>

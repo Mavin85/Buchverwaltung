@@ -7,16 +7,16 @@ public class Book {
     private String title;
     private String author;
     private boolean favourite;
-    private String coverString;
+    private int cover;
     private String comment;
 
-    public Book(int id, String isbn, String title, String author, boolean favourite, String coverString, String comment) {
+    public Book(int id, String isbn, String title, String author, boolean favourite, int cover, String comment) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.favourite = favourite;
-        this.coverString = coverString;
+        this.cover = cover;
         this.comment = comment;
     }
 
@@ -34,7 +34,7 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", favourite=" + favourite +
-                ", coverString='" + coverString + '\'' +
+                ", coverString='" + cover + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
     }
@@ -79,12 +79,12 @@ public class Book {
         this.favourite = favourite;
     }
 
-    public String getCoverString() {
-        return coverString;
+    public int getCover() {
+        return cover;
     }
 
-    public void setCoverString(String coverString) {
-        this.coverString = coverString;
+    public void setCoverString(int cover) {
+        this.cover = cover;
     }
 
     public String getComment() {
