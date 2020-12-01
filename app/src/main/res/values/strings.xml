@@ -6,5 +6,12 @@
     <string name="detailBookButtonDelete">delete</string>
     <string name="detailBookButtonLending">lend</string>
     <string name="detailBooksLendingPlannedTimeIdentifier">planned back</string>
+    <string name="detailLendingButtonGiveBack">returned</string>
+    <string name="detailLendingButtonDelete">delete</string>
+    <string name="detailLendingButtonConfirm">confirm</string>
+    <string name="detailLendingEditTextLender">name</string>
+    <string name="detailLendingEditTextComment">comment</string>
+    <string name="detailLendingEditTextActualDate">actual date</string>
+    <string name="detailLendingEditTextPlannedDate">planned back</string>
 
 </resources>
