@@ -11,14 +11,13 @@ public class Book {
     private int cover;
     private String comment;
 
-    public Book(int id, String isbn, String title, String author, boolean favourite, String coverString,int cover, String comment) {
+    public Book(int id, String isbn, String title, String author, boolean favourite, String coverString, String comment) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.favourite = favourite;
         this.coverString = coverString;
-        this.cover = cover;
         this.comment = comment;
     }
 
@@ -37,7 +36,6 @@ public class Book {
                 ", author='" + author + '\'' +
                 ", favourite=" + favourite +
                 ", coverString='" + coverString + '\'' +
-                ", cover='" + cover + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
     }
