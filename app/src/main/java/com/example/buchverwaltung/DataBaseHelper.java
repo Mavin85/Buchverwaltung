@@ -41,7 +41,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // creates the db on the first launch of the app
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableBook = "CREATE TABLE " + BOOK + " (" + BOOK_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + ISBN + " String, " + TITLE + " String, " + AUTHOR + " String, " + COVER + " String, " + FAVOURITE + " int, " + COMMENT_BOOK + " String)";
+        String createTableBook = "CREATE TABLE " + BOOK + " (" + BOOK_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + ISBN + " String, " + TITLE + " String, " + AUTHOR + " String, " + COVER + " int, " + FAVOURITE + " int, " + COMMENT_BOOK + " String)";
         db.execSQL(createTableBook);
         String createTableBorrowingProcess = "CREATE TABLE " + BORROWING_PROCESS + " (" + BORROWING_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + BOOK_ID + " int, " + BORROWER + " String, " + BEGINNING + " String, " + END + " String, " + COMPLETED + " int, " + COMMENT_BORROWING + " String)";
         db.execSQL(createTableBorrowingProcess);
@@ -69,7 +69,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(TITLE, book.getTitle());
         cv.put(AUTHOR, book.getAuthor());
         cv.put(FAVOURITE, book.isFavourite() ? 1 : 0);
-        cv.put(COVER, book.getCoverString());
+        cv.put(COVER, book.getCoverInt());
         cv.put(COMMENT_BOOK, book.getComment());
 
         try {
@@ -89,7 +89,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put("isbn", book.getIsbn());
         values.put("title", book.getTitle());
         values.put("author", book.getAuthor());
-        values.put("cover", book.getCoverString());
+        values.put("cover", book.getCoverInt());
         values.put("favourite", book.isFavourite() ? 1 : 0);
         values.put("comment_book", book.getComment());
 
@@ -196,11 +196,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     String bookIsbn = cursor.getString(cursor.getColumnIndex("isbn"));
                     String bookTitle = cursor.getString(cursor.getColumnIndex("title"));
                     String bookAuthor = cursor.getString(cursor.getColumnIndex("author"));
-                    String bookCover = cursor.getString(cursor.getColumnIndex("cover"));
                     boolean bookFavourite = cursor.getInt(cursor.getColumnIndex("favourite")) == 1;
+                    int bookCover = cursor.getInt(cursor.getColumnIndex("cover"));
                     String bookComment = cursor.getString(cursor.getColumnIndex("comment_book"));
 
-                    Book newBook = new Book(bookId, bookIsbn, bookTitle, bookAuthor, bookFavourite, bookCover, bookComment);
+                    Book newBook = new Book(bookId,bookIsbn,bookTitle,bookAuthor,bookFavourite,bookCover,bookComment);
                     bookList.add(newBook);
                 } while (cursor.moveToNext());
             }

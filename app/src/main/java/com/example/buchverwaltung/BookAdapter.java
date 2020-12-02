@@ -1,5 +1,6 @@
 package com.example.buchverwaltung;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
-    ArrayList<Book> bookList = new ArrayList<>();
+    List<Book> bookList;
 
-    public BookAdapter(ArrayList<Book> bookList) {
+    public BookAdapter(List<Book> bookList) {
         this.bookList = bookList;
     }
 
@@ -30,7 +32,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     public void onBindViewHolder(@NonNull BookAdapter.BookViewHolder holder, int position) {
         Book b = bookList.get(position);
 
-        holder.b_cover.setImageResource(b.getCover());
+        holder.b_cover.setImageResource(b.getCoverInt());
+
         holder.b_title.setText(b.getTitle());
         holder.b_author.setText(b.getAuthor());
         holder.b_isbn.setText(b.getIsbn());
