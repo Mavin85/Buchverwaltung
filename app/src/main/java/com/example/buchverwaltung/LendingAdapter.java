@@ -9,12 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class LendingAdapter extends RecyclerView.Adapter<LendingAdapter.LendingViewHolder> {
-    ArrayList<Lending> lendingList = new ArrayList<>();
+    List<Lending> lendingList;
 
-    public LendingAdapter(ArrayList<Lending> lendingList) {
+    public LendingAdapter(List<Lending> lendingList) {
         this.lendingList = lendingList;
     }
 
@@ -30,7 +30,7 @@ public class LendingAdapter extends RecyclerView.Adapter<LendingAdapter.LendingV
     public void onBindViewHolder(@NonNull LendingAdapter.LendingViewHolder holder, int position) {
         Lending l = lendingList.get(position);
 
-        if(l.getIsBack() == true) {
+        if(l.getIsBack()) {
             holder.l_checkbox.setImageResource(R.drawable.ic_baseline_check_box_45);
         } else {
             holder.l_checkbox.setImageResource(R.drawable.ic_baseline_check_box_outline_blank_45);

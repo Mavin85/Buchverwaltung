@@ -1,11 +1,14 @@
 package com.example.buchverwaltung;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,9 +18,11 @@ import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
     List<Book> bookList;
+    Context con;
 
-    public BookAdapter(List<Book> bookList) {
+    public BookAdapter(List<Book> bookList, Context con) {
         this.bookList = bookList;
+        this.con = con;
     }
 
     @NonNull
@@ -31,9 +36,15 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public void onBindViewHolder(@NonNull BookAdapter.BookViewHolder holder, int position) {
         Book b = bookList.get(position);
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(con, DetailActivityBook.class);
+                i.putExtra("id", String.valueOf(b.getId()));
+                con.startActivity(i);
+            }
+        });
         holder.b_cover.setImageResource(b.getCoverInt());
-
         holder.b_title.setText(b.getTitle());
         holder.b_author.setText(b.getAuthor());
         holder.b_isbn.setText(b.getIsbn());

@@ -1,18 +1,16 @@
 package com.example.buchverwaltung;
 
-import java.util.Date;
-
 public class Lending {
 
     private int id;
     private int book_id;
     private String lender;
-    private Date start;
-    private Date planned_end;
+    private String start;
+    private String planned_end;
     private Boolean isBack;
     private String comment;
 
-    public Lending(int id, int book_id, String lender, Date start, Date planned_end, Boolean isBack, String comment) {
+    public Lending(int id, int book_id, String lender, String start, String planned_end, Boolean isBack, String comment) {
         this.id = id;
         this.book_id = book_id;
         this.lender = lender;
@@ -46,19 +44,19 @@ public class Lending {
         this.lender = lender;
     }
 
-    public Date getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public Date getPlanned_end() {
+    public String getPlanned_end() {
         return planned_end;
     }
 
-    public void setPlanned_end(Date planned_end) {
+    public void setPlanned_end(String planned_end) {
         this.planned_end = planned_end;
     }
 

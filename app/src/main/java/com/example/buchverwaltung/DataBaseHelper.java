@@ -110,7 +110,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         try {
             if(cursor.moveToFirst()) {
                 do {
-                    remBorrowingProcess(cursor.getInt(cursor.getColumnIndex("borrowing_id")));
+                    remLending(cursor.getInt(cursor.getColumnIndex("borrowing_id")));
                 } while (cursor.moveToNext());
             }
         }
@@ -128,17 +128,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // adds a borrowing process to the db
-    public void addBorrowingProcess(BorrowingProcess proc) {
+    // adds a lending to the db
+    public void addLending(Lending lending) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put(BOOK_ID, proc.getBook_id());
-        cv.put(BORROWER, proc.getBorrower());
-        cv.put(BEGINNING, proc.getBeginning());
-        cv.put(END, proc.getEnding());
-        cv.put(COMPLETED, proc.isCompleted() ? 1 : 0);
-        cv.put(COMMENT_BORROWING, proc.getComment());
+        cv.put(BOOK_ID, lending.getBook_id());
+        cv.put(BORROWER, lending.getLender());
+        cv.put(BEGINNING, lending.getStart());
+        cv.put(END, lending.getPlanned_end());
+        cv.put(COMPLETED, lending.getIsBack() ? 1 : 0);
+        cv.put(COMMENT_BORROWING, lending.getComment());
 
         try {
             db.insert(BORROWING_PROCESS, null, cv);
@@ -149,17 +149,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     // edits a borrowing process
-    public void editBorrowingProcess(BorrowingProcess proc) {
+    public void editLending(Lending lending) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        int procId = proc.getId();
+        int procId = lending.getId();
         ContentValues values = new ContentValues();
-        values.put("book_id", proc.getBook_id());
-        values.put("borrower", proc.getBorrower());
-        values.put("beginning", proc.getBeginning());
-        values.put("ending", proc.getEnding());
-        values.put("completed", proc.isCompleted() ? 1 : 0);
-        values.put("comment_borrowing", proc.getComment());
+        values.put("book_id",lending.getBook_id());
+        values.put("borrower",lending.getLender());
+        values.put("beginning", lending.getStart());
+        values.put("ending", lending.getPlanned_end());
+        values.put("completed", lending.getIsBack() ? 1 : 0);
+        values.put("comment_borrowing", lending.getComment());
 
         try {
             db.update("Borrowing_Process", values, "borrowing_id = " + procId, null);
@@ -170,7 +170,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     // removes a borrowing process from the db
-    public void remBorrowingProcess(int id) {
+    public void remLending(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
@@ -213,6 +213,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return bookList;
     }
 
+    // returns one book
+    public Book getBook(int bookId) {
+        return getBooks("SELECT * FROM Book WHERE book_id = " + bookId + ";").get(0);
+    }
+
     // returns all saved books
     public List<Book> getAllBooks() {
         return getBooks("SELECT * FROM " + BOOK);
@@ -229,8 +234,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     // returns borrowing processes for one book
-    public List<BorrowingProcess> getBorrowProcesses(int bookId) {
-        List<BorrowingProcess> borrowList = new ArrayList<>();
+    public List<Lending> getLending(int bookId) {
+        List<Lending> lendingList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM BORROWING_PROCESS WHERE book_id = " + bookId + " ORDER BY borrowing_id desc;", null);
 
@@ -244,8 +249,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     boolean completed = cursor.getInt(cursor.getColumnIndex("completed")) == 1;
                     String comment_borrowing = cursor.getString(cursor.getColumnIndex("comment_borrowing"));
 
-                    BorrowingProcess newBoPo = new BorrowingProcess(borrowId, bookId, borrower, beginning, ending, completed, comment_borrowing);
-                    borrowList.add(newBoPo);
+                    Lending lending = new Lending(borrowId, bookId, borrower, beginning, ending, completed, comment_borrowing);
+                    lendingList.add(lending);
                 } while (cursor.moveToNext());
             }
         }
@@ -254,6 +259,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        return borrowList;
+        return lendingList;
     }
 }

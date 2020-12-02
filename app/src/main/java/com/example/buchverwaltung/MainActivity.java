@@ -4,19 +4,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     Book bookTest;
+    Lending lendingTest;
 
     RecyclerView bookListView;
+    ImageView addBookView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
         bookTest = new Book(5,"isbn", "titel","author",true,2131165279,"comment");
 
+        lendingTest = new Lending(5, 1, "Lender", "Start", "Ende", true, "Das ist ein Kommentar");
+
         DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
-        dataBaseHelper.addBook(bookTest);
-        dataBaseHelper.addBook(bookTest);
-        dataBaseHelper.addBook(bookTest);
+        //dataBaseHelper.addLending(lendingTest);
         List<Book> allBooks = dataBaseHelper.getAllBooks();
-        Toast.makeText(MainActivity.this, allBooks.toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(MainActivity.this, allBooks.toString(), Toast.LENGTH_LONG).show();
 
         int coverInt = R.drawable.bookexamplecover;
         //Toast.makeText(MainActivity.this, String.valueOf(coverInt), Toast.LENGTH_LONG).show();
@@ -43,9 +47,18 @@ public class MainActivity extends AppCompatActivity {
 
 
         bookListView = (RecyclerView) findViewById(R.id.mainBooksRecyclerView);
-        BookAdapter ba = new BookAdapter(allBooks);
+        BookAdapter ba = new BookAdapter(allBooks, MainActivity.this);
         bookListView.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
         bookListView.setAdapter(ba);
+
+        addBookView = findViewById(R.id.mainAddIcon);
+        addBookView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iAddBook = new Intent(MainActivity.this, DetailActivityBookAdding.class);
+                startActivity(iAddBook);
+            }
+        });
 
     }
 }

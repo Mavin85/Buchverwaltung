@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_round_filter_list_36"
             app:tint="@color/colorTextIcons"
-            />
+            android:clickable="true" />
 
         <TextView
             android:id="@+id/mainAppName"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_add_36"
             app:tint="@color/colorTextIcons"
-            />
+            android:clickable="true" />
     </LinearLayout>
 
 
