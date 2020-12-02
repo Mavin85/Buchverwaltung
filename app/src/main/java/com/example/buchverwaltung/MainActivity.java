@@ -8,9 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     /*
@@ -18,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     EditText title, isbn;
     ListView bookList;
      */
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -23,7 +23,6 @@
         app:layout_constraintTop_toTopOf="@id/mainbooksBookTitle"
         />
 
-
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/mainbooksCover"
         android:layout_width="0dp"

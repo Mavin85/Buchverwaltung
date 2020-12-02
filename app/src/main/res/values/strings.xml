@@ -11,7 +11,7 @@
     <string name="detailLendingButtonConfirm">confirm</string>
     <string name="detailLendingEditTextLender">name</string>
     <string name="detailLendingEditTextComment">comment</string>
-    <string name="detailLendingEditTextActualDate">actual date</string>
-    <string name="detailLendingEditTextPlannedDate">planned back</string>
+    <string name="detailLendingTextViewActualDate">Select lend start</string>
+    <string name="detailLendingTextViewPlannedDate">Select planned end</string>
 
 </resources>

@@ -11,7 +11,7 @@
     <string name="detailLendingButtonConfirm">bestätigen</string>
     <string name="detailLendingEditTextLender">Name</string>
     <string name="detailLendingEditTextComment">Kommentar</string>
-    <string name="detailLendingEditTextActualDate">aktuelles Datum</string>
-    <string name="detailLendingEditTextPlannedDate">geplant zurück</string>
+    <string name="detailLendingTextViewActualDate">Wähle Verleihbeginn aus</string>
+    <string name="detailLendingTextViewPlannedDate">Wähle geplantes Ende aus</string>
 
 </resources>
