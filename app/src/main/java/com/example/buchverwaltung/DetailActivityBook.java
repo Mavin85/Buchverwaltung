@@ -12,6 +12,7 @@ import android.icu.text.Transliterator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ public class DetailActivityBook extends AppCompatActivity {
     RoundedImageView coverView;
     TextView titleView, authorView, isbnView, commentView;
     ImageView favouriteIcon;
+    Button deleteButton, newLendingButton;
+
 
     List<Lending> lendingList;
     LendingAdapter la;
@@ -106,8 +109,23 @@ public class DetailActivityBook extends AppCompatActivity {
         lendingListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         lendingListView.setAdapter(la);
 
+        deleteButton = findViewById(R.id.detailBookButtonDelete);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iDeleteBookBackToMain = new Intent(DetailActivityBook.this, MainActivity.class);
+                dataBaseHelper.remBook(b.getId());
+                startActivity(iDeleteBookBackToMain);
+            }
+        });
 
+        newLendingButton = findViewById(R.id.detailBookButtonLending);
+        newLendingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
 
     }
 }
