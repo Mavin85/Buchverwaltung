@@ -2,16 +2,26 @@ package com.example.buchverwaltung;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
+    BookRepo br = new BookRepo();
 
     /*
     Button btnAdd, btnView;
@@ -19,10 +29,21 @@ public class MainActivity extends AppCompatActivity {
     ListView bookList;
      */
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getBookList();
+
+        Button reload = (Button) findViewById(R.id.reload);
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getBookList();
+            }
+        });
 
         /*
         btnAdd = findViewById(R.id.btnAdd);
@@ -52,5 +73,39 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, allBooks.toString(), Toast.LENGTH_LONG).show();
         });
         */
+    }
+
+    private void getBookList(){
+        br.getBook(new Callback<ResponseMapper>(){
+
+            @Override
+            public void onResponse(Call<ResponseMapper> call, Response<ResponseMapper> response) {
+                if (response.isSuccessful()) {
+                    Log.d("MainActivity", "getPersonList: onResponse -> SUCCESSFUL");
+                    ResponseMapper responseMapper = response.body();
+                    setText(responseMapper.book);
+                }
+                else
+                    Log.d("MainActivity", "getPersonList: onResponse -> NOT SUCCESSFUL");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseMapper> call, Throwable t) {
+                Log.d("MainActivity", "getPersonList: onResponse -> FAILED \n" + t);
+                Context context = getApplicationContext();
+                int duration = Toast.LENGTH_SHORT;
+                String error = getString(R.string.error);
+                Toast toast = Toast.makeText(context, error, duration);
+                toast.show();
+            }
+        });
+    }
+
+    public void setText(ApiResponseBook responsebook){
+        String test = responsebook.getBib_key() + " " + responsebook.getThumbnail_url() + " " + responsebook.getDetails().getTitle();
+        Toast toast=Toast.makeText(getApplicationContext(),test,Toast.LENGTH_SHORT);
+        toast.show();
+
+
     }
 }

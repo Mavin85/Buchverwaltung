@@ -13,5 +13,6 @@
     <string name="detailLendingEditTextComment">comment</string>
     <string name="detailLendingEditTextActualDate">actual date</string>
     <string name="detailLendingEditTextPlannedDate">planned back</string>
+    <string name="error">Error! Please reload.</string>
 
 </resources>
