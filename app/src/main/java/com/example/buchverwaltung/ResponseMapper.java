@@ -6,6 +6,7 @@ import java.util.List;
 
 public class ResponseMapper {
 
-    @SerializedName("ISBN:0201558025")
-    ApiResponseBook book;
+    String foo;
+    @SerializedName("items")
+    List<ApiResponseBook> book;
 }

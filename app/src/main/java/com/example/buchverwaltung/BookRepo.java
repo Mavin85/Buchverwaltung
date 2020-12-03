@@ -1,5 +1,6 @@
 package com.example.buchverwaltung;
 
+import android.util.Log;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -16,7 +17,7 @@ public class BookRepo {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://openlibrary.org/")
+                .baseUrl("https://www.googleapis.com/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -25,8 +26,9 @@ public class BookRepo {
 
     }
 
-    public void getBook(Callback<ResponseMapper> callback){
-        Call<ResponseMapper> apiResultCall = apiCallService.getbookList("ISBN:0201558025","true");
+    public void getBook(Callback<ResponseMapper> callback, String isbn){
+        String isbn_string = "isbn:" + isbn;
+        Call<ResponseMapper> apiResultCall = apiCallService.getbook(isbn_string);
         apiResultCall.enqueue(callback);
     }
 
