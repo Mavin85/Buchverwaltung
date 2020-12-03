@@ -69,4 +69,5 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             b_isbn = (TextView) itemView.findViewById(R.id.mainbooksIsbn);
         }
     }
+
 }
