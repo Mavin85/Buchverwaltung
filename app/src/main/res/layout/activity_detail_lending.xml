@@ -114,7 +114,7 @@
         />
 
     <Button
-        android:id="@+id/detailLendingConfirm"
+        android:id="@+id/detailLendingButtonConfirm"
         style="@style/buttonStyleDefault"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

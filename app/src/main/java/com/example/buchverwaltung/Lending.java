@@ -20,6 +20,28 @@ public class Lending {
         this.comment = comment;
     }
 
+    public Lending(int book_id, String lender, String start, String planned_end, Boolean isBack, String comment) {
+        this.book_id = book_id;
+        this.lender = lender;
+        this.start = start;
+        this.planned_end = planned_end;
+        this.isBack = isBack;
+        this.comment = comment;
+    }
+
+    @Override
+    public String toString() {
+        return "Lending{" +
+                "id=" + id +
+                ", book_id=" + book_id +
+                ", lender='" + lender + '\'' +
+                ", start='" + start + '\'' +
+                ", planned_end='" + planned_end + '\'' +
+                ", isBack=" + isBack +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
+
     public int getId() {
         return id;
     }

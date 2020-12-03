@@ -1,5 +1,7 @@
 package com.example.buchverwaltung;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +15,11 @@ import java.util.List;
 
 public class LendingAdapter extends RecyclerView.Adapter<LendingAdapter.LendingViewHolder> {
     List<Lending> lendingList;
+    Context con;
 
-    public LendingAdapter(List<Lending> lendingList) {
+    public LendingAdapter(List<Lending> lendingList, Context con) {
         this.lendingList = lendingList;
+        this.con = con;
     }
 
     @NonNull
@@ -29,6 +33,16 @@ public class LendingAdapter extends RecyclerView.Adapter<LendingAdapter.LendingV
     @Override
     public void onBindViewHolder(@NonNull LendingAdapter.LendingViewHolder holder, int position) {
         Lending l = lendingList.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(con, DetailActivityLending.class);
+                i.putExtra("lendingId", l.getId());
+                con.startActivity(i);
+            }
+        });
+
 
         if(l.getIsBack()) {
             holder.l_checkbox.setImageResource(R.drawable.ic_baseline_check_box_45);

@@ -40,7 +40,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(con, DetailActivityBook.class);
-                i.putExtra("id", String.valueOf(b.getId()));
+                i.putExtra("id", b.getId());
                 con.startActivity(i);
             }
         });

@@ -150,6 +150,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // edits a borrowing process
     public void editLending(Lending lending) {
+        Log.d("tag1","anfang");
         SQLiteDatabase db = this.getWritableDatabase();
 
         int procId = lending.getId();
@@ -161,12 +162,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put("completed", lending.getIsBack() ? 1 : 0);
         values.put("comment_borrowing", lending.getComment());
 
+        Log.d("tag1","vortry");
         try {
             db.update("Borrowing_Process", values, "borrowing_id = " + procId, null);
+            Log.d("tag1","intry");
         }
         catch(Exception e) {
             Log.e("editBorrowingProcess", e.getMessage());
+            Log.d("tag1","incatch");
         }
+        Log.d("tag1","nachtry");
     }
 
     // removes a borrowing process from the db
@@ -233,8 +238,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return getBooks("SELECT * FROM Borrowing_Process b LEFT JOIN Book bo ON bo.book_id = b.book_id where completed = 0;");
     }
 
+
     // returns borrowing processes for one book
-    public List<Lending> getLending(int bookId) {
+    public List<Lending> getLendings(int bookId) {
         List<Lending> lendingList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM BORROWING_PROCESS WHERE book_id = " + bookId + " ORDER BY borrowing_id desc;", null);
@@ -260,5 +266,40 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return lendingList;
+    }
+
+    // returns a list of lendings that are results of the query
+    public List<Lending> getLendings(String lendingQuery) {
+        List<Lending> lendingList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(lendingQuery, null);
+
+        try {
+            if(cursor.moveToFirst()) {
+                do {
+                    int borrowId = cursor.getInt(cursor.getColumnIndex("borrowing_id"));
+                    int bookId = cursor.getInt(cursor.getColumnIndex("book_id"));
+                    String borrower = cursor.getString(cursor.getColumnIndex("borrower"));
+                    String beginning = cursor.getString(cursor.getColumnIndex("beginning"));
+                    String ending = cursor.getString(cursor.getColumnIndex("ending"));
+                    boolean completed = cursor.getInt(cursor.getColumnIndex("completed")) == 1;
+                    String comment_borrowing = cursor.getString(cursor.getColumnIndex("comment_borrowing"));
+
+                    Lending lending = new Lending(borrowId, bookId, borrower, beginning, ending, completed, comment_borrowing);
+                    lendingList.add(lending);
+                } while (cursor.moveToNext());
+            }
+        }
+        catch(Exception e) {
+            Log.e("getLendings: " + lendingQuery, e.getMessage());
+        }
+
+        cursor.close();
+        return lendingList;
+    }
+
+    // returns one lending
+    public Lending getLending(int lendingId) {
+        return getLendings("SELECT * FROM Borrowing_Process WHERE borrowing_id = " + lendingId + ";").get(0);
     }
 }

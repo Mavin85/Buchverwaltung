@@ -58,7 +58,7 @@ public class DetailActivityBook extends AppCompatActivity {
         super.onStart();
 
         Intent i = getIntent();
-        int bookId = Integer.parseInt(i.getStringExtra("id"));
+        int bookId = i.getIntExtra("id",0);
 
         dataBaseHelper = new DataBaseHelper(DetailActivityBook.this);
         b = dataBaseHelper.getBook(bookId);
@@ -99,13 +99,13 @@ public class DetailActivityBook extends AppCompatActivity {
             }
         });
 
-        lendingList = dataBaseHelper.getLending(b.getId());
+        lendingList = dataBaseHelper.getLendings(b.getId());
 
         // filling RecyclerView with sorted by title
         lendingListView = (RecyclerView) findViewById(R.id.detailBookRecyclerViewLendings);
         //sorting List by Title for first call of activity
         Collections.sort(lendingList, lendingComparatorByStart);
-        la = new LendingAdapter(lendingList);
+        la = new LendingAdapter(lendingList,this);
         lendingListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         lendingListView.setAdapter(la);
 
@@ -123,7 +123,9 @@ public class DetailActivityBook extends AppCompatActivity {
         newLendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent iAddALending = new Intent(DetailActivityBook.this, DetailActivityLending.class);
+                iAddALending.putExtra("bookId", b.getId());
+                startActivity(iAddALending);
             }
         });
 

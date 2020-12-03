@@ -21,6 +21,7 @@ public class Book {
         this.comment = comment;
     }
 
+
     // small constructor for testing
     public Book(String title, String isbn) {
         this.title = title;
