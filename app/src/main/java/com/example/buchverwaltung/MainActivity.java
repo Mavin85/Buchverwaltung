@@ -17,7 +17,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     Book bookTest;
-    Lending lendingTest;
+    Lending lendingTestFalse;
+    Lending lendingTestTrue;
 
     RecyclerView bookListView;
     ImageView addBookView;
@@ -34,10 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
         bookTest = new Book(5,"isbn", "titel","author",true,2131165279,"comment");
 
-        lendingTest = new Lending(5, 1, "Lender", "Start", "Ende", true, "Das ist ein Kommentar");
+        lendingTestFalse = new Lending(5, 1, "Lender", "Start", "Ende", false, "Das ist ein Kommentar");
+        lendingTestTrue = new Lending(5, 1, "Lender", "Start", "Ende", true, "Das ist ein Kommentar");
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
-        //dataBaseHelper.addLending(lendingTest);
+        //dataBaseHelper.addLending(lendingTestTrue);
+
         List<Book> allBooks = dataBaseHelper.getAllBooks();
         //Toast.makeText(MainActivity.this, allBooks.toString(), Toast.LENGTH_LONG).show();
 
