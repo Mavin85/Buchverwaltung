@@ -91,6 +91,7 @@
         app:layout_constraintTop_toBottomOf="@id/detailBookAuthor"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/colorRatingInactive"
+        android:clickable="true"
         />
 
     <View

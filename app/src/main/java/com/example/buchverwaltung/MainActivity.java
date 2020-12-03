@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int filterCount;
 
-    //Defininitions of Sorting Functions for the RecyclerView
+    //Definitions of Sorting Functions for the RecyclerView
     final Comparator<Book> bookComparatorByTitle = new Comparator<Book>() {
         @Override
         public int compare(Book b1, Book b2) {
@@ -63,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
         bookTest = new Book(5,"isbn", "ztiteltest","aauthortest",false,2131165279,"comment");
 
         lendingTestFalse = new Lending(5, 1, "Lender", "Start", "Ende", false, "Das ist ein Kommentar");
-        lendingTestTrue = new Lending(5, 1, "Lender", "Start", "Ende", true, "Das ist ein Kommentar");
+        lendingTestTrue = new Lending(1, 1, "Lender 3", "12/03/2020", "01/10/2021", false, "Das ist ein Kommentar");
 
         dataBaseHelper = new DataBaseHelper(MainActivity.this);
-        //dataBaseHelper.addBook(bookTest);
+        //dataBaseHelper.addLending(lendingTestTrue);
 
         allBooks = dataBaseHelper.getAllBooks();
         //Toast.makeText(MainActivity.this, allBooks.toString(), Toast.LENGTH_LONG).show();
@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(iAddBook);
             }
         });
-
 
 
 
