@@ -10,4 +10,5 @@ public class ResponseMapper {
     private List<ApiResponseBook> book;
 
     public List<ApiResponseBook> getBook() {return book;}
+
 }

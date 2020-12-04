@@ -2,9 +2,20 @@ package com.example.buchverwaltung;
 
 public class ApiResponseBook {
 
+    private String isbn;
+    private ApiDetails volumeInfo;
+
     public ApiResponseBook(String isbn, ApiDetails volumeInfo) {
         this.isbn = isbn;
         this.volumeInfo = volumeInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "ApiResponseBook{" +
+                "isbn='" + isbn + '\'' +
+                ", volumeInfo=" + volumeInfo +
+                '}';
     }
 
     public String getIsbn() {
@@ -22,10 +33,5 @@ public class ApiResponseBook {
     public void setVolumeInfo(ApiDetails volumeInfo) {
         this.volumeInfo = volumeInfo;
     }
-
-    private String isbn;
-    private ApiDetails volumeInfo;
-
-
 
 }

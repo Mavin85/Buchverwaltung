@@ -21,6 +21,15 @@ public class Book {
         this.comment = comment;
     }
 
+    public Book(String isbn, String title, String author, boolean favourite, int coverInt, String comment) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.favourite = favourite;
+        this.coverInt = coverInt;
+        this.comment = comment;
+    }
+
 
     // small constructor for testing
     public Book(String title, String isbn) {
