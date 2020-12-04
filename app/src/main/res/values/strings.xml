@@ -16,5 +16,7 @@
     <string name="mainActivityFilterFavourites" >Show favorites only</string>
     <string name="mainActivitySortingByTitel">Sorting by titel</string>
     <string name="mainActivitySortingByAuthor">Sorting by author</string>
-
+    <string name="detailLendingEditTextActualDate">actual date</string>
+    <string name="detailLendingEditTextPlannedDate">planned back</string>
+    <string name="error">Error! Please reload.</string>
 </resources>
