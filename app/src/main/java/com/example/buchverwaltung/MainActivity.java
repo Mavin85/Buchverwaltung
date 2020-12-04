@@ -1,6 +1,7 @@
 package com.example.buchverwaltung;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.app.Person;
 import android.content.Context;
@@ -24,6 +25,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     BookRepo br = new BookRepo();
+    String isbn = new String();
     private List<ApiResponseBook> bookList = new ArrayList<>();
 
     /*
@@ -32,19 +34,16 @@ public class MainActivity extends AppCompatActivity {
     ListView bookList;
      */
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getBookList("0201558025");
 
         Button reload = (Button) findViewById(R.id.reload);
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getBookList("0201558025");
+                getBookList(isbn);
             }
         });
 
@@ -84,10 +83,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseMapper> call, Response<ResponseMapper> response) {
                 if (response.isSuccessful()) {
+                    if (response.body() == null
+                            || response.body().getBook().isEmpty()) {
+                        //Implement error handling here
+                        return;
+                    }
                     Log.d("MainActivity", "getBookList: onResponse -> SUCCESSFUL");
-                    ResponseMapper responseMapper = response.body();
-                    bookList.addAll(responseMapper.book);
-                    ApiResponseBook book = bookList.get(0);
+                    ApiResponseBook book = response.body().getBook().get(0);
                     setText(book);
                 }
                 else
