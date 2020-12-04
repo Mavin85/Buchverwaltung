@@ -8,10 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.Collections;
@@ -118,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                             Collections.sort(allBooks, bookComparatorByTitle);
                             Log.d("Tag",allBooks.toString());
                             ba.notifyDataSetChanged();
-                            Toast.makeText(MainActivity.this, "Sortierung nach Favoriten", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.mainActivityFilterFavourites, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

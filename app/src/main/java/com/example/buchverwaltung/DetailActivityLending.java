@@ -1,9 +1,11 @@
 package com.example.buchverwaltung;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -25,14 +28,12 @@ public class DetailActivityLending extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener actualDateSetListener, plannedDateSetListener;
     Button confirmButton, deleteButton, isBackButton;
     Lending lending;
-
     DataBaseHelper dataBaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_lending);
-
-
     }
 
     @Override
@@ -45,66 +46,65 @@ public class DetailActivityLending extends AppCompatActivity {
         isBackButton = findViewById(R.id.detailLendingButtonGiveBack);
         nameView = findViewById(R.id.detailLendingEditTextLender);
         commentView = findViewById(R.id.detailLendingEditTextComment);
-
         selectActualDate = findViewById(R.id.detailLendingTextViewActualDate);
         selectPlannedEndDate = findViewById(R.id.detailLendingTextViewPlannedDate);
 
         dataBaseHelper = new DataBaseHelper(DetailActivityLending.this);
 
+        //Needed for the DatePickers...
+        actualDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                month = month + 1;
+                String date =  day + "/" + month + "/" + year;
+                selectActualDate.setText(date);
+            }
+        };
+        selectActualDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        DetailActivityLending.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        actualDateSetListener,
+                        year,month,day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+        plannedDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                month = month + 1;
+                String date =  day + "/" + month + "/" + year;
+                selectPlannedEndDate.setText(date);
+            }
+        };
+        selectPlannedEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        DetailActivityLending.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        plannedDateSetListener,
+                        year,month,day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        // create a new lending
         if(i.hasExtra("bookId")) {
-            //Needed for the DatePickers...
-
-            selectActualDate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Calendar cal = Calendar.getInstance();
-                    int year = cal.get(Calendar.YEAR);
-                    int month = cal.get(Calendar.MONTH);
-                    int day = cal.get(Calendar.DAY_OF_MONTH);
-
-                    DatePickerDialog dialog = new DatePickerDialog(
-                            DetailActivityLending.this,
-                            android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                            actualDateSetListener,
-                            year,month,day);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                }
-            });
-            plannedDateSetListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int day) {
-                    month = month + 1;
-                    String date =  day + "/" + month + "/" + year;
-                    selectPlannedEndDate.setText(date);
-                }
-            };
-            selectPlannedEndDate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Calendar cal = Calendar.getInstance();
-                    int year = cal.get(Calendar.YEAR);
-                    int month = cal.get(Calendar.MONTH);
-                    int day = cal.get(Calendar.DAY_OF_MONTH);
-
-                    DatePickerDialog dialog = new DatePickerDialog(
-                            DetailActivityLending.this,
-                            android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                            plannedDateSetListener,
-                            year,month,day);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialog.show();
-                }
-            });
-            actualDateSetListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int day) {
-                    month = month + 1;
-                    String date =  day + "/" + month + "/" + year;
-                    selectActualDate.setText(date);
-                }
-            };
-
             deleteButton.setVisibility(Button.GONE);
             isBackButton.setVisibility(Button.GONE);
 
@@ -119,9 +119,9 @@ public class DetailActivityLending extends AppCompatActivity {
                     startActivity(iBackToDetailBook);
                 }
             });
-
-
         }
+
+        // edit an existing lending
         if(i.hasExtra("lendingId")) {
             lending = dataBaseHelper.getLending(i.getIntExtra("lendingId",0));
 
@@ -133,8 +133,7 @@ public class DetailActivityLending extends AppCompatActivity {
             confirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    lending = new Lending(lending.getId(),lending.getBook_id(),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),false,String.valueOf(commentView.getText()));
-
+                    lending = new Lending(lending.getId(),lending.getBook_id(),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),lending.getIsBack(),String.valueOf(commentView.getText()));
                     dataBaseHelper.editLending(lending);
 
                     Intent iBackToDetailBook2 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
@@ -143,17 +142,36 @@ public class DetailActivityLending extends AppCompatActivity {
                 }
             });
 
+            isBackButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    lending.setIsBack(true);
+                    dataBaseHelper.editLending(lending);
 
+                    // direkt zurückspringen oder nicht? Wenn ja müssen andere Änderungen auch übernommen werden
+                    /*
+                    Intent iBackToDetailBook3 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+                    iBackToDetailBook3.putExtra("id", lending.getBook_id());
+                    startActivity(iBackToDetailBook3);
+                     */
+                }
+            });
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dataBaseHelper.remLending(lending.getId());
+
+                    Intent iBackToDetailBook4 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+                    iBackToDetailBook4.putExtra("id", lending.getBook_id());
+                    startActivity(iBackToDetailBook4);
+                }
+            });
+
+            // hide returned button
             if(lending.getIsBack()) {
                 isBackButton.setVisibility(Button.GONE);
-
-
             }
-
         }
-
-
-
     }
-
 }

@@ -13,5 +13,6 @@
     <string name="detailLendingEditTextComment">comment</string>
     <string name="detailLendingTextViewActualDate">Select lend start</string>
     <string name="detailLendingTextViewPlannedDate">Select planned end</string>
+    <string name="mainActivityFilterFavourites" >Show favorites only</string>
 
 </resources>

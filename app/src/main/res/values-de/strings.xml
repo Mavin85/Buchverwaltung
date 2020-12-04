@@ -13,5 +13,6 @@
     <string name="detailLendingEditTextComment">Kommentar</string>
     <string name="detailLendingTextViewActualDate">Wähle Verleihbeginn aus</string>
     <string name="detailLendingTextViewPlannedDate">Wähle geplantes Ende aus</string>
+    <string name="mainActivityFilterFavourites" >Nur Favoriten anzeigen</string>
 
 </resources>
