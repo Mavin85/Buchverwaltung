@@ -6,7 +6,8 @@ import java.util.List;
 
 public class ResponseMapper {
 
-    String foo;
     @SerializedName("items")
-    List<ApiResponseBook> book;
+    private List<ApiResponseBook> book;
+
+    public List<ApiResponseBook> getBook() {return book;}
 }
