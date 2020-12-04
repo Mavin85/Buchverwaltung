@@ -9,10 +9,12 @@
     <string name="detailLendingButtonGiveBack">returned</string>
     <string name="detailLendingButtonDelete">delete</string>
     <string name="detailLendingButtonConfirm">confirm</string>
-    <string name="detailLendingEditTextLender">name</string>
-    <string name="detailLendingEditTextComment">comment</string>
+    <string name="detailLendingEditTextLender">Name</string>
+    <string name="detailLendingEditTextComment">Comment</string>
     <string name="detailLendingTextViewActualDate">Select lend start</string>
     <string name="detailLendingTextViewPlannedDate">Select planned end</string>
     <string name="mainActivityFilterFavourites" >Show favorites only</string>
+    <string name="mainActivitySortingByTitel">Sorting by titel</string>
+    <string name="mainActivitySortingByAuthor">Sorting by author</string>
 
 </resources>

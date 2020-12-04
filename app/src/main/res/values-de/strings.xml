@@ -14,5 +14,7 @@
     <string name="detailLendingTextViewActualDate">Wähle Verleihbeginn aus</string>
     <string name="detailLendingTextViewPlannedDate">Wähle geplantes Ende aus</string>
     <string name="mainActivityFilterFavourites" >Nur Favoriten anzeigen</string>
+    <string name="mainActivitySortingByTitel">Sortierung nach Titel</string>
+    <string name="mainActivitySortingByAuthor">Sortierung nach Author</string>
 
 </resources>

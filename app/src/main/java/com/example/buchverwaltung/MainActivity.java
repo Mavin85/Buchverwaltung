@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     Collections.sort(allBooks, bookComparatorByTitle);
                     Log.d("Tag",allBooks.toString());
                     ba.notifyDataSetChanged();
-                    Toast.makeText(MainActivity.this, "Sortierung nach Titel", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.mainActivitySortingByTitel, Toast.LENGTH_SHORT).show();
                 }else {
                     if(filterCount == 1) {  //sorting by author
                         filterCount = 2;
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                         Collections.sort(allBooks, bookComparatorByAuthor);
                         Log.d("Tag",allBooks.toString());
                         ba.notifyDataSetChanged();
-                        Toast.makeText(MainActivity.this, "Sortierung nach Author", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, R.string.mainActivitySortingByAuthor, Toast.LENGTH_SHORT).show();
 
                     }else {
                         if(filterCount == 2) {  //sorting by favourites
