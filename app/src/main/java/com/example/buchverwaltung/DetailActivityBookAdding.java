@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.Group;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     String isbn;
 
     String title;
+    DataBaseHelper dataBaseHelper;
 
     Book theBook;
     //BookRepo br;
@@ -71,63 +73,65 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 isbn = "0735619670";
                 //isbn = query;
                 Log.d("tag5", "Log funktioniert");
-                getTheBook(isbn);
+                getTheBook(new Callback<ResponseMapper>() {
+                    @Override
+                    public void onResponse(Call<ResponseMapper> call, Response<ResponseMapper> response) {
+
+                        ApiResponseBook book = response.body().getBook().get(0);
+                        Book normalBook = new Book(isbn, book.getVolumeInfo().getTitle(), book.getVolumeInfo().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+
+                        title = normalBook.getTitle();
+
+                        //show the book
+                        group.setVisibility(group.VISIBLE);
+                        titleView.setText(normalBook.getTitle());
+                        authorView.setText(normalBook.getAuthor());
+                        coverView.setImageResource(normalBook.getCoverInt());
+                        Log.d("tag5", "ganz durch");
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseMapper> call, Throwable t) {
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+                        String error = getString(R.string.error);
+                        Toast toast = Toast.makeText(context, error, duration);
+                        toast.show();
+                    }
+                },isbn);
 
 
                 Log.d("tag5", "title: " + title);
-                //apiResponseBook = bookList.get(0);
 
-                //theBook = new Book(5, )
 
-                /*
-                //Log.d("tag2", "onQueryTextSubmit");
-                //0735619670
-               //isbn = "0735619670";
-                isbn = query;
-                Log.d("tag5", isbn);
-                br = new BookRepo();
-                getBookList(isbn);
-                Log.d("tag5", "test vor");
-               // Log.d("tag5", );
-                responseBook = bookList.get(0);
-                Log.d("tag5", "test danach");
-*/
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Log.d("tag2", "onQueryTextChange");
                 return false;
             }
         });
     }
 
 
-    // mit void
-    public void getTheBook(String isbn){
+    public void getTheBook(Callback<ResponseMapper> callback,String isbn){
+
         br.getBook(new Callback<ResponseMapper>(){
 
             @Override
             public void onResponse(@NotNull Call<ResponseMapper> call, @NotNull Response<ResponseMapper> response) {
                 if (response.isSuccessful()) {
-                    Log.d("foooooooo", response.body().toString());
                     try {
-                        Log.d("tag5", "successful");
-                        ApiResponseBook book = response.body().getBook().get(0);
                         Log.d("MainActivity", "getBookList: onResponse -> SUCCESSFUL");
-                        Log.d("tag5", "isbn" + book.getVolumeInfo().getTitle());
-                        Book normalBook = new Book(isbn, book.getVolumeInfo().getTitle(), book.getVolumeInfo().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
 
-                        title = normalBook.getTitle();
+                        callback.onResponse(call,response);
+                        call.enqueue(callback);
 
-                        // show the book
-                        group.setVisibility(group.VISIBLE);
-                        titleView.setText(normalBook.getTitle());
-                        authorView.setText(normalBook.getAuthor());
-                        coverView.setImageResource(normalBook.getCoverInt());
+                        return;
                     }
                     catch(Exception e){
+                        Log.d("MainActivity", "getBookList: onResponse -> Exception: "+ e);
                         return;
                     }
                 }
@@ -141,42 +145,11 @@ public class DetailActivityBookAdding extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call<ResponseMapper> call, @NotNull Throwable t) {
                 Log.d("MainActivity", "getBookList: onResponse -> FAILED \n" + t);
-                Context context = getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
-                String error = getString(R.string.error);
-                Toast toast = Toast.makeText(context, error, duration);
-                toast.show();
+
+                callback.onFailure(call,t);
+                call.enqueue(callback);
                 return;
             }
         }, isbn);
     }
-
-
-    // mit Rückgabe
-    /*
-    private ApiResponseBook getTheBook(String isbn) {
-        br.getBook(new Callback<ResponseMapper>() {
-            @Override
-            public void onResponse(Call<ResponseMapper> call, Response<ResponseMapper> response) {
-                if (response.isSuccessful()) {
-                    Log.d("tag5", response.body().toString());
-                    try {
-                        ApiResponseBook book = response.body().getBook().get(0);
-                        Log.d("tag5", "getBookList: onResponse -> SUCCESSFUL");
-                        bookList.add(book);
-                        //setText(book);
-                    } catch (Exception e) {
-                        return;
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseMapper> call, Throwable t) {
-                return;
-            }
-        }, isbn);
-        return bookList.get(0);
-    }
-    */
 }
