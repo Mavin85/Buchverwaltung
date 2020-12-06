@@ -6,10 +6,14 @@ import androidx.constraintlayout.widget.Group;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -79,22 +83,38 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 getTheBook(new Callback<BookApiResult>() {
                     @Override
                     public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
+                        Log.d("Tag0","hallo wir sind on Response");
                         ApiResponseBook book = response.body().getBook().get(0);
 
 
-                        theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+
+
+                        //Diese Drecksarbeit möchte Marvin irgendwann erledigen... dann einfach beim theBook erstellen ein int angeben...!!!
+
 
                         //save the thumbnail in drawable and change the imagesource of the apiresponseBook with a Int to the local location
+                        String thumbnailPath = book.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
+                        String[] parts = thumbnailPath.split(":");
 
+                        String newThumbnailPath = parts[0] + "s:" + parts[1];
 
+                        Picasso.get().load(newThumbnailPath).error(R.drawable.ic_emptythumbnail).into(coverView);
 
-
+                        theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
                         //show the book
                         group.setVisibility(group.VISIBLE);
                         titleView.setText(theBook.getTitle());
                         authorView.setText(theBook.getAuthor());
-                        coverView.setImageResource(theBook.getCoverInt());
-                        Log.d("tag5", "ganz durch");
+
+                        dataBaseHelper = new DataBaseHelper(DetailActivityBookAdding.this);
+                        confirmButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dataBaseHelper.addBook(theBook);
+                                Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
+                                startActivity(iBacktoMain);
+                            }
+                        });
                     }
 
                     @Override

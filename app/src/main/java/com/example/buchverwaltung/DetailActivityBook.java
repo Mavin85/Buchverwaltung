@@ -130,4 +130,10 @@ public class DetailActivityBook extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent iBacktoMain = new Intent(DetailActivityBook.this, MainActivity.class);
+        startActivity(iBacktoMain);
+    }
 }

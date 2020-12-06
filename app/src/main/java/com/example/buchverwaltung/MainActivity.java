@@ -34,13 +34,15 @@ public class MainActivity extends AppCompatActivity {
     final Comparator<Book> bookComparatorByTitle = new Comparator<Book>() {
         @Override
         public int compare(Book b1, Book b2) {
-            return b1.getTitle().compareTo(b2.getTitle());
+
+            return b1.getTitle().toLowerCase().compareTo(b2.getTitle().toLowerCase());
         }
     };
     final Comparator<Book> bookComparatorByAuthor = new Comparator<Book>() {
         @Override
         public int compare(Book b1, Book b2) {
-            return b1.getAuthor().compareTo(b2.getAuthor());
+
+            return b1.getAuthor().toLowerCase().compareTo(b2.getAuthor().toLowerCase());
         }
     };
 
@@ -57,13 +59,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         //creating example Books and Lendings
-        bookTest = new Book(5,"isbn", "ztiteltest","aauthortest",false,2131165279,"comment");
+        bookTest = new Book(5,"isbn", "titeltest","authortest",false,2131165279,"comment");
 
         lendingTestFalse = new Lending(5, 1, "Lender", "Start", "Ende", false, "Das ist ein Kommentar");
         lendingTestTrue = new Lending(1, 1, "Lender 3", "12/03/2020", "01/10/2021", false, "Das ist ein Kommentar");
 
         dataBaseHelper = new DataBaseHelper(MainActivity.this);
-        //dataBaseHelper.addLending(lendingTestTrue);
+        //dataBaseHelper.addBook(bookTest);
 
         allBooks = dataBaseHelper.getAllBooks();
         //Toast.makeText(MainActivity.this, allBooks.toString(), Toast.LENGTH_LONG).show();
