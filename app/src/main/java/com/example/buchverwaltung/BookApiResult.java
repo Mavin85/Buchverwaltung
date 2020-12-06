@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ResponseMapper {
+public class BookApiResult {
 
     @SerializedName("items")
     private List<ApiResponseBook> book;

@@ -1,20 +1,23 @@
 package com.example.buchverwaltung;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ApiResponseBook {
 
     private String isbn;
-    private ApiDetails volumeInfo;
+    @SerializedName("volumeInfo")
+    private ApiDetails apiDetails;
 
     public ApiResponseBook(String isbn, ApiDetails volumeInfo) {
         this.isbn = isbn;
-        this.volumeInfo = volumeInfo;
+        this.apiDetails = volumeInfo;
     }
 
     @Override
     public String toString() {
         return "ApiResponseBook{" +
                 "isbn='" + isbn + '\'' +
-                ", volumeInfo=" + volumeInfo +
+                ", apiDetails=" + apiDetails +
                 '}';
     }
 
@@ -26,12 +29,12 @@ public class ApiResponseBook {
         this.isbn = isbn;
     }
 
-    public ApiDetails getVolumeInfo() {
-        return volumeInfo;
+    public ApiDetails getApiDetails() {
+        return apiDetails;
     }
 
-    public void setVolumeInfo(ApiDetails volumeInfo) {
-        this.volumeInfo = volumeInfo;
+    public void setApiDetails(ApiDetails apiDetails) {
+        this.apiDetails = apiDetails;
     }
 
 }

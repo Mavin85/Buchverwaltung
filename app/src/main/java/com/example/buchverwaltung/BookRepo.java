@@ -1,6 +1,5 @@
 package com.example.buchverwaltung;
 
-import android.util.Log;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -9,7 +8,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BookRepo {
-    ApiCallService apiCallService;
+    BookApi bookApi;
     public BookRepo(){
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -22,13 +21,13 @@ public class BookRepo {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        apiCallService = retrofit.create(ApiCallService.class);
+        bookApi = retrofit.create(BookApi.class);
 
     }
 
-    public void getBook(Callback<ResponseMapper> callback, String isbn){
+    public void getABook(Callback<BookApiResult> callback, String isbn){
         String isbn_string = "isbn:" + isbn;
-        Call<ResponseMapper> apiResultCall = apiCallService.getbook(isbn_string);
+        Call<BookApiResult> apiResultCall = bookApi.getABook(isbn_string);
         apiResultCall.enqueue(callback);
     }
 

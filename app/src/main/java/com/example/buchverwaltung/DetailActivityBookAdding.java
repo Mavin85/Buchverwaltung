@@ -5,19 +5,23 @@ import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.Group;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 import retrofit2.Call;
@@ -72,26 +76,29 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
                 isbn = "0735619670";
                 //isbn = query;
-                Log.d("tag5", "Log funktioniert");
-                getTheBook(new Callback<ResponseMapper>() {
+                getTheBook(new Callback<BookApiResult>() {
                     @Override
-                    public void onResponse(Call<ResponseMapper> call, Response<ResponseMapper> response) {
-
+                    public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
                         ApiResponseBook book = response.body().getBook().get(0);
-                        Book normalBook = new Book(isbn, book.getVolumeInfo().getTitle(), book.getVolumeInfo().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
 
-                        title = normalBook.getTitle();
+
+                        theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+
+                        //save the thumbnail in drawable and change the imagesource of the apiresponseBook with a Int to the local location
+
+
+
 
                         //show the book
                         group.setVisibility(group.VISIBLE);
-                        titleView.setText(normalBook.getTitle());
-                        authorView.setText(normalBook.getAuthor());
-                        coverView.setImageResource(normalBook.getCoverInt());
+                        titleView.setText(theBook.getTitle());
+                        authorView.setText(theBook.getAuthor());
+                        coverView.setImageResource(theBook.getCoverInt());
                         Log.d("tag5", "ganz durch");
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseMapper> call, Throwable t) {
+                    public void onFailure(Call<BookApiResult> call, Throwable t) {
                         Context context = getApplicationContext();
                         int duration = Toast.LENGTH_SHORT;
                         String error = getString(R.string.error);
@@ -115,12 +122,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     }
 
 
-    public void getTheBook(Callback<ResponseMapper> callback,String isbn){
+    public void getTheBook(Callback<BookApiResult> callback, String isbn){
 
-        br.getBook(new Callback<ResponseMapper>(){
+        br.getABook(new Callback<BookApiResult>(){
 
             @Override
-            public void onResponse(@NotNull Call<ResponseMapper> call, @NotNull Response<ResponseMapper> response) {
+            public void onResponse(@NotNull Call<BookApiResult> call, @NotNull Response<BookApiResult> response) {
                 if (response.isSuccessful()) {
                     try {
                         Log.d("MainActivity", "getBookList: onResponse -> SUCCESSFUL");
@@ -143,7 +150,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NotNull Call<ResponseMapper> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<BookApiResult> call, @NotNull Throwable t) {
                 Log.d("MainActivity", "getBookList: onResponse -> FAILED \n" + t);
 
                 callback.onFailure(call,t);
@@ -152,4 +159,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
             }
         }, isbn);
     }
+
 }
+
+

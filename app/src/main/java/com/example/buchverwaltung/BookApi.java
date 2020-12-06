@@ -4,9 +4,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface ApiCallService {
+public interface BookApi {
     @GET("books/v1/volumes")
-    Call<ResponseMapper> getbook(@Query("q") String isbn);
+    Call<BookApiResult> getABook(@Query("q") String isbn);
 
 
 }
