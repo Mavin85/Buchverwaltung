@@ -171,6 +171,8 @@ public class DetailActivityLending extends AppCompatActivity {
             // hide returned button
             if(lending.getIsBack()) {
                 isBackButton.setVisibility(Button.GONE);
+                selectActualDate.setClickable(false);
+                selectPlannedEndDate.setClickable(false);
             }
         }
     }
