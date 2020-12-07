@@ -8,10 +8,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -77,19 +75,30 @@ public class DetailActivityBookAdding extends AppCompatActivity {
         group = findViewById(R.id.detailBookAddingGroupPreview);
 
         group.setVisibility(group.GONE);
+        confirmButton.setVisibility(View.GONE);
+
+        dataBaseHelper = new DataBaseHelper(DetailActivityBookAdding.this);
 
         searchIsbnView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-                isbn = "0735619670";
+                //isbn = "0735619670";
                 //isbn = "361301548X";
                 //isbn = "9789385031595";
-                //isbn = query;
+                isbn = query;
                 getTheBook(new Callback<BookApiResult>() {
                     @Override
                     public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
-                        Log.d("Tag0","hallo wir sind on Response");
+                        Log.d("tag0","hallo wir sind on Response");
+                        searchIsbnView.clearFocus();
+                        // check if there is a book in the answer
+                        if(response.body().getTotalItems().equals("0")) {
+                            Log.d("tag0","no books on answer");
+                            Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
                         ApiResponseBook book = response.body().getBook().get(0);
 
                         // built the correct thumbnail url (https instead of http)
@@ -102,18 +111,21 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
                         theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
 
-                        //show the book
+                        // show the book
                         group.setVisibility(group.VISIBLE);
                         titleView.setText(theBook.getTitle());
                         authorView.setText(theBook.getAuthor());
 
-                        dataBaseHelper = new DataBaseHelper(DetailActivityBookAdding.this);
+                        // show confirm button
+                        confirmButton.setVisibility(View.VISIBLE);
+
+                        // add book to the app
                         confirmButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 // store the cover
                                 Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
-
+                                // add the book to the database
                                 dataBaseHelper.addBook(theBook);
                                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
                                 startActivity(iBacktoMain);
@@ -123,17 +135,11 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<BookApiResult> call, Throwable t) {
-                        Context context = getApplicationContext();
-                        int duration = Toast.LENGTH_SHORT;
-                        String error = getString(R.string.error);
-                        Toast toast = Toast.makeText(context, error, duration);
-                        toast.show();
+                        Log.d("tag0","onFailure oben");
+                        searchIsbnView.clearFocus();
+                        Toast.makeText(context, R.string.apiErrorFailure, Toast.LENGTH_LONG).show();
                     }
                 },isbn);
-
-
-                Log.d("tag5", "title: " + title);
-
 
                 return false;
             }
@@ -147,39 +153,34 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
 
     public void getTheBook(Callback<BookApiResult> callback, String isbn){
-
         br.getABook(new Callback<BookApiResult>(){
-
             @Override
             public void onResponse(@NotNull Call<BookApiResult> call, @NotNull Response<BookApiResult> response) {
                 if (response.isSuccessful()) {
                     try {
-                        Log.d("MainActivity", "getBookList: onResponse -> SUCCESSFUL");
-
+                        Log.d("tag0", "getBookList: onResponse -> SUCCESSFUL");
                         callback.onResponse(call,response);
-                        call.enqueue(callback);
-
+                        //call.enqueue(callback);
                         return;
                     }
                     catch(Exception e){
-                        Log.d("MainActivity", "getBookList: onResponse -> Exception: "+ e);
+                        Log.d("tag0", "getBookList: onResponse -> Exception: "+ e);
                         return;
                     }
                 }
                 else {
-                    Log.d("tag5", "not successful");
-                    Log.d("MainActivity", "getPersonList: onResponse -> NOT SUCCESSFUL");
+                    Log.d("tag0", "getPersonList: onResponse -> NOT SUCCESSFUL");
+                    Toast.makeText(context, R.string.apiErrorResponse, Toast.LENGTH_LONG).show();
                     return;
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<BookApiResult> call, @NotNull Throwable t) {
-                Log.d("MainActivity", "getBookList: onResponse -> FAILED \n" + t);
-
+                Log.d("tag0", "getBookList: onResponse -> FAILED \n" + t);
                 callback.onFailure(call,t);
-                call.enqueue(callback);
-                return;
+                //call.enqueue(callback);
+                //return;
             }
         }, isbn);
     }
@@ -227,6 +228,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
         };
     }
 
+
+    @Override
+    public void onBackPressed() {
+        Intent iBackToMain = new Intent(DetailActivityBookAdding.this, MainActivity.class);
+        startActivity(iBackToMain);
+    }
 }
 
 

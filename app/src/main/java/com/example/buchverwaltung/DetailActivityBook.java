@@ -1,19 +1,17 @@
 package com.example.buchverwaltung;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.icu.text.Transliterator;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -119,27 +117,39 @@ public class DetailActivityBook extends AppCompatActivity {
         lendingListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         lendingListView.setAdapter(la);
 
+        // delete button
         deleteButton = findViewById(R.id.detailBookButtonDelete);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // delete the cover
-                // exapmle path: /data/data/com.example.buchverwaltung/app_coverDir/0735619670_cover.jpeg
-                String baseDir = DetailActivityBook.this.getFilesDir().getPath().replace("files", "");
-                String coverDir = baseDir + "app_coverDir/" + b.getIsbn() + "_cover.jpeg";
-                File file = new File(coverDir);
-                if(file.exists()){
-                    try {
-                        file.getCanonicalFile().delete();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                new AlertDialog.Builder(DetailActivityBook.this)
+                        .setTitle(R.string.dialogDeleteBook)
+                        //.setMessage(R.string.dialogDeleteBook)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                // delete the entries from the db
-                Intent iDeleteBookBackToMain = new Intent(DetailActivityBook.this, MainActivity.class);
-                dataBaseHelper.remBook(b.getId());
-                startActivity(iDeleteBookBackToMain);
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Toast.makeText(DetailActivityBook.this, "Yaay", Toast.LENGTH_SHORT).show();
+
+                                // delete the cover
+                                // exapmle path: /data/data/com.example.buchverwaltung/app_coverDir/0735619670_cover.jpeg
+                                String baseDir = DetailActivityBook.this.getFilesDir().getPath().replace("files", "");
+                                String coverDir = baseDir + "app_coverDir/" + b.getIsbn() + "_cover.jpeg";
+                                File file = new File(coverDir);
+                                if(file.exists()){
+                                    try {
+                                        file.getCanonicalFile().delete();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                // delete the entries from the db
+                                Intent iDeleteBookBackToMain = new Intent(DetailActivityBook.this, MainActivity.class);
+                                dataBaseHelper.remBook(b.getId());
+                                startActivity(iDeleteBookBackToMain);
+                            }})
+                        .setNegativeButton(android.R.string.cancel, null).show();
             }
         });
 

@@ -3,7 +3,10 @@ package com.example.buchverwaltung;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -15,9 +18,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class DetailActivityLending extends AppCompatActivity {
@@ -29,6 +35,7 @@ public class DetailActivityLending extends AppCompatActivity {
     Button confirmButton, deleteButton, isBackButton;
     Lending lending;
     DataBaseHelper dataBaseHelper;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,7 @@ public class DetailActivityLending extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Intent i = getIntent();
+        context = getApplicationContext();
 
         deleteButton = findViewById(R.id.detailLendingButtonDelete);
         confirmButton = findViewById(R.id.detailLendingButtonConfirm);
@@ -153,18 +161,28 @@ public class DetailActivityLending extends AppCompatActivity {
                     Intent iBackToDetailBook3 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
                     iBackToDetailBook3.putExtra("id", lending.getBook_id());
                     startActivity(iBackToDetailBook3);
-                     */
+                    */
                 }
             });
 
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    dataBaseHelper.remLending(lending.getId());
+                public void onClick(View v) { {
+                        new AlertDialog.Builder(DetailActivityLending.this)
+                                .setTitle(R.string.dialogDeleteLending)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                    Intent iBackToDetailBook4 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
-                    iBackToDetailBook4.putExtra("id", lending.getBook_id());
-                    startActivity(iBackToDetailBook4);
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        Toast.makeText(DetailActivityLending.this, "Yaay", Toast.LENGTH_SHORT).show();
+                                        dataBaseHelper.remLending(lending.getId());
+
+                                        Intent iBackToDetailBook4 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+                                        iBackToDetailBook4.putExtra("id", lending.getBook_id());
+                                        startActivity(iBackToDetailBook4);
+                                    }})
+                                .setNegativeButton(android.R.string.cancel, null).show();
+                    }
                 }
             });
 

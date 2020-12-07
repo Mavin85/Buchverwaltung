@@ -18,5 +18,9 @@
     <string name="mainActivitySortingByAuthor">Sortierung nach Author</string>
     <string name="detailLendingEditTextActualDate">aktuelles Datum</string>
     <string name="detailLendingEditTextPlannedDate">geplant zurück</string>
-    <string name="error">Fehler! Bitte neu laden.</string>
+    <string name="apiErrorFailure">Fehler! Bitte Internetverbindung überprüfen und neu laden.</string>
+    <string name="apiErrorResponse" >Fehlerhafte Antwort vom Server erhalten. Bitte erneut probieren.</string>
+    <string name="apiNoBookReceived" >Keine Bücher gefunden!</string>
+    <string name="dialogDeleteBook" >Möchten Sie das Buch löschen?</string>
+    <string name="dialogDeleteLending">Möchten Sie den Ausleihvorgang löschen?</string>
 </resources>
