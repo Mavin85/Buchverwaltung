@@ -41,7 +41,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // creates the db on the first launch of the app
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableBook = "CREATE TABLE " + BOOK + " (" + BOOK_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + ISBN + " String, " + TITLE + " String, " + AUTHOR + " String, " + COVER + " int, " + FAVOURITE + " int, " + COMMENT_BOOK + " String)";
+        String createTableBook = "CREATE TABLE " + BOOK + " (" + BOOK_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + ISBN + " Text, " + TITLE + " String, " + AUTHOR + " String, " + COVER + " int, " + FAVOURITE + " int, " + COMMENT_BOOK + " String)";
         db.execSQL(createTableBook);
         String createTableBorrowingProcess = "CREATE TABLE " + BORROWING_PROCESS + " (" + BORROWING_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + BOOK_ID + " int, " + BORROWER + " String, " + BEGINNING + " String, " + END + " String, " + COMPLETED + " int, " + COMMENT_BORROWING + " String)";
         db.execSQL(createTableBorrowingProcess);

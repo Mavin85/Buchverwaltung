@@ -1,14 +1,17 @@
 package com.example.buchverwaltung;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.icu.text.Transliterator;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -63,8 +69,12 @@ public class DetailActivityBook extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(DetailActivityBook.this);
         b = dataBaseHelper.getBook(bookId);
 
+        // load cover
+        ContextWrapper cw = new ContextWrapper(DetailActivityBook.this);
+        File directory = cw.getDir("coverDir", Context.MODE_PRIVATE);
+        File myImageFile = new File(directory, b.getIsbn() + "_cover.jpeg");
         coverView = findViewById(R.id.detailBookCover);
-        coverView.setImageResource(b.getCoverInt());
+        Picasso.get().load(myImageFile).into(coverView);
 
         titleView = findViewById(R.id.detailBookTitle);
         titleView.setText(b.getTitle());
@@ -113,6 +123,20 @@ public class DetailActivityBook extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // delete the cover
+                // exapmle path: /data/data/com.example.buchverwaltung/app_coverDir/0735619670_cover.jpeg
+                String baseDir = DetailActivityBook.this.getFilesDir().getPath().replace("files", "");
+                String coverDir = baseDir + "app_coverDir/" + b.getIsbn() + "_cover.jpeg";
+                File file = new File(coverDir);
+                if(file.exists()){
+                    try {
+                        file.getCanonicalFile().delete();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // delete the entries from the db
                 Intent iDeleteBookBackToMain = new Intent(DetailActivityBook.this, MainActivity.class);
                 dataBaseHelper.remBook(b.getId());
                 startActivity(iDeleteBookBackToMain);

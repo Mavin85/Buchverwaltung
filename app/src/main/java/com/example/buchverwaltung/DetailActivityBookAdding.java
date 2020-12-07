@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,6 +53,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     List<ApiResponseBook> bookList;
     List<Book> normalBookList;
 
+    Context context;
+
     public DetailActivityBookAdding() {
     }
 
@@ -64,6 +67,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        context = getApplicationContext();
 
         searchIsbnView = findViewById(R.id.detailBookAddingSearchViewIsbn);
         coverView = findViewById(R.id.detailBookAddingCover);
@@ -79,6 +83,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
 
                 isbn = "0735619670";
+                //isbn = "361301548X";
+                //isbn = "9789385031595";
                 //isbn = query;
                 getTheBook(new Callback<BookApiResult>() {
                     @Override
@@ -86,21 +92,16 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         Log.d("Tag0","hallo wir sind on Response");
                         ApiResponseBook book = response.body().getBook().get(0);
 
-
-
-
-                        //Diese Drecksarbeit möchte Marvin irgendwann erledigen... dann einfach beim theBook erstellen ein int angeben...!!!
-
-
-                        //save the thumbnail in drawable and change the imagesource of the apiresponseBook with a Int to the local location
+                        // built the correct thumbnail url (https instead of http)
                         String thumbnailPath = book.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
                         String[] parts = thumbnailPath.split(":");
-
                         String newThumbnailPath = parts[0] + "s:" + parts[1];
 
+                        // load cover into the book preview
                         Picasso.get().load(newThumbnailPath).error(R.drawable.ic_emptythumbnail).into(coverView);
 
                         theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+
                         //show the book
                         group.setVisibility(group.VISIBLE);
                         titleView.setText(theBook.getTitle());
@@ -110,6 +111,9 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         confirmButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                // store the cover
+                                Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
+
                                 dataBaseHelper.addBook(theBook);
                                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
                                 startActivity(iBacktoMain);
@@ -178,6 +182,49 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 return;
             }
         }, isbn);
+    }
+
+    // method to save the book cover with picasso
+    private Target picassoImageTarget(Context context, final String imageDir, final String imageName) {
+        Log.d("picassoImageTarget", " picassoImageTarget");
+        ContextWrapper cw = new ContextWrapper(context);
+        final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE); // path to /data/data/yourapp/app_imageDir
+        return new Target() {
+            @Override
+            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final File myImageFile = new File(directory, imageName); // Create image file
+                        FileOutputStream fos = null;
+                        try {
+                            fos = new FileOutputStream(myImageFile);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                fos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.i("image", "image saved to >>>" + myImageFile.getAbsolutePath());
+
+                    }
+                }).start();
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                if (placeHolderDrawable != null) {}
+            }
+        };
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.buchverwaltung;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +50,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                 con.startActivity(i);
             }
         });
-        holder.b_cover.setImageResource(b.getCoverInt());
+
+        // load cover
+        ContextWrapper cw = new ContextWrapper(con);
+        File directory = cw.getDir("coverDir", Context.MODE_PRIVATE);
+        File myImageFile = new File(directory, b.getIsbn() + "_cover.jpeg");
+        Picasso.get().load(myImageFile).into(holder.b_cover);
+
         holder.b_title.setText(b.getTitle());
         holder.b_author.setText(b.getAuthor());
         holder.b_isbn.setText(b.getIsbn());
