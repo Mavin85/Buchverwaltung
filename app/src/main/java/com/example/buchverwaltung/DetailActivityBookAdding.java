@@ -3,8 +3,6 @@ package com.example.buchverwaltung;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.Group;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -53,8 +51,6 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     List<ApiResponseBook> bookList;
     List<Book> normalBookList;
 
-    BookAdapter ba;
-    RecyclerView bookListView;
     Context context;
 
     public DetailActivityBookAdding() {
@@ -70,15 +66,11 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         context = getApplicationContext();
-        bookListView = (RecyclerView) findViewById(R.id.mainBooksRecyclerView);
 
         searchIsbnView = findViewById(R.id.detailBookAddingSearchViewIsbn);
-
-        /*
         coverView = findViewById(R.id.detailBookAddingCover);
         titleView = findViewById(R.id.detailBookAddingTitle);
         authorView = findViewById(R.id.detailBookAddingAuthor);
-         */
         confirmButton = findViewById(R.id.detailBookAddingButtonAdd);
         group = findViewById(R.id.detailBookAddingGroupPreview);
 
@@ -91,6 +83,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
+                Log.d("tag0", "TextSubmit");
                 //isbn = "0735619670";
                 //isbn = "361301548X";
                 //isbn = "9789385031595";
@@ -155,9 +148,13 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
                         Log.d("tag0","hallo wir sind on Response");
+                        call.cancel();
+                        Log.d("tag0",String.valueOf(call.isCanceled()) + " " + String.valueOf(call.isExecuted()));
+
                         searchIsbnView.clearFocus();
                         Log.d("tag0","Anzahl Treffer: " + response.body().getTotalItems());
                         // check if there is a book in the answer
+
                         if(response.body().getTotalItems().equals("0")) {
                             Log.d("tag0","no books on answer");
                             Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_LONG).show();
@@ -165,24 +162,10 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         }
 
 
-                        List<ApiResponseBook> responseBooks = response.body().getBook();
-                        List<Book> foundBooks = null;
-                        int bookCounter = 0;
+                        ApiResponseBook book = response.body().getBook().get(0);
 
-                        while(!responseBooks.isEmpty()) {
-                            ApiResponseBook bo = responseBooks.remove(bookCounter);
-                            Log.d("tag0","Book Counter: " + bookCounter);
-                            bookCounter++;
-                            foundBooks.add(new Book(bo.getIndustryIdentifiers().get(0).getIsbn(), bo.getApiDetails().getTitle(), bo.getApiDetails().getAuthors().get(0), false, 0, ""));
-                        }
-
-
-                        ba = new BookAdapter(foundBooks, context);
-                        bookListView.setLayoutManager(new LinearLayoutManager(context,RecyclerView.VERTICAL,false));
-                        bookListView.setAdapter(ba);
-
-                        /*
                         // built the correct thumbnail url (https instead of http)
+
                         String thumbnailPath = book.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
                         String[] parts = thumbnailPath.split(":");
                         String newThumbnailPath = parts[0] + "s:" + parts[1];
@@ -196,23 +179,25 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         group.setVisibility(group.VISIBLE);
                         titleView.setText(theBook.getTitle());
                         authorView.setText(theBook.getAuthor());
-                         */
 
                         // show confirm button
                         confirmButton.setVisibility(View.VISIBLE);
 
                         // add book to the app
+
                         confirmButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 // store the cover
-                                //Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
+                                Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
                                 // add the book to the database
-                                //dataBaseHelper.addBook(theBook);
+                                dataBaseHelper.addBook(theBook);
                                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
                                 startActivity(iBacktoMain);
                             }
                         });
+
+
                     }
 
                     @Override
@@ -242,7 +227,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                     try {
                         Log.d("tag0", "getBookList: onResponse -> SUCCESSFUL");
                         callback.onResponse(call,response);
-                        //call.enqueue(callback);
+                        call.enqueue(callback);
                         return;
                     }
                     catch(Exception e){
@@ -276,7 +261,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         Log.d("tag0", "getBookList: onResponse -> SUCCESSFUL");
                         callback.onResponse(call,response);
                         //call.enqueue(callback);
-                        return;
+                        //return;
                     }
                     catch(Exception e){
                         Log.d("tag0", "getBookList: onResponse -> Exception: "+ e);
