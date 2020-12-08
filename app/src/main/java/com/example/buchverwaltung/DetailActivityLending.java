@@ -48,6 +48,7 @@ public class DetailActivityLending extends AppCompatActivity {
         super.onStart();
         Intent i = getIntent();
         context = getApplicationContext();
+        dataBaseHelper = new DataBaseHelper(DetailActivityLending.this);
 
         deleteButton = findViewById(R.id.detailLendingButtonDelete);
         confirmButton = findViewById(R.id.detailLendingButtonConfirm);
@@ -57,9 +58,21 @@ public class DetailActivityLending extends AppCompatActivity {
         selectActualDate = findViewById(R.id.detailLendingTextViewActualDate);
         selectPlannedEndDate = findViewById(R.id.detailLendingTextViewPlannedDate);
 
-        dataBaseHelper = new DataBaseHelper(DetailActivityLending.this);
-
         //Needed for the DatePickers...
+        handleDateSetters();
+
+        // create a new lending
+        if(i.hasExtra("bookId")) {
+            createLending(i);
+        }
+
+        // edit an existing lending
+        if(i.hasExtra("lendingId")) {
+            handleExistingLending(i);
+        }
+    }
+
+    private void handleDateSetters() {
         actualDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -110,88 +123,98 @@ public class DetailActivityLending extends AppCompatActivity {
                 dialog.show();
             }
         });
+    }
 
-        // create a new lending
-        if(i.hasExtra("bookId")) {
-            deleteButton.setVisibility(Button.GONE);
-            isBackButton.setVisibility(Button.GONE);
+    private void createLending(Intent i) {
+        deleteButton.setVisibility(Button.GONE);
+        isBackButton.setVisibility(Button.GONE);
 
-            confirmButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    lending = new Lending(i.getIntExtra("bookId",1),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),false,String.valueOf(commentView.getText()));
-                    dataBaseHelper.addLending(lending);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lending = new Lending(i.getIntExtra("bookId",1),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),false,String.valueOf(commentView.getText()));
+                dataBaseHelper.addLending(lending);
 
-                    Intent iBackToDetailBook = new Intent(DetailActivityLending.this, DetailActivityBook.class);
-                    iBackToDetailBook.putExtra("id", lending.getBook_id());
-                    startActivity(iBackToDetailBook);
-                }
-            });
-        }
-
-        // edit an existing lending
-        if(i.hasExtra("lendingId")) {
-            lending = dataBaseHelper.getLending(i.getIntExtra("lendingId",0));
-
-            nameView.setText(lending.getLender());
-            commentView.setText(lending.getComment());
-            selectActualDate.setText(lending.getStart());
-            selectPlannedEndDate.setText(lending.getPlanned_end());
-
-            confirmButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    lending = new Lending(lending.getId(),lending.getBook_id(),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),lending.getIsBack(),String.valueOf(commentView.getText()));
-                    dataBaseHelper.editLending(lending);
-
-                    Intent iBackToDetailBook2 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
-                    iBackToDetailBook2.putExtra("id", lending.getBook_id());
-                    startActivity(iBackToDetailBook2);
-                }
-            });
-
-            isBackButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    lending.setIsBack(true);
-                    dataBaseHelper.editLending(lending);
-
-                    // direkt zurückspringen oder nicht? Wenn ja müssen andere Änderungen auch übernommen werden
-                    /*
-                    Intent iBackToDetailBook3 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
-                    iBackToDetailBook3.putExtra("id", lending.getBook_id());
-                    startActivity(iBackToDetailBook3);
-                    */
-                }
-            });
-
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) { {
-                        new AlertDialog.Builder(DetailActivityLending.this)
-                                .setTitle(R.string.dialogDeleteLending)
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        Toast.makeText(DetailActivityLending.this, "Yaay", Toast.LENGTH_SHORT).show();
-                                        dataBaseHelper.remLending(lending.getId());
-
-                                        Intent iBackToDetailBook4 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
-                                        iBackToDetailBook4.putExtra("id", lending.getBook_id());
-                                        startActivity(iBackToDetailBook4);
-                                    }})
-                                .setNegativeButton(android.R.string.cancel, null).show();
-                    }
-                }
-            });
-
-            // hide returned button
-            if(lending.getIsBack()) {
-                isBackButton.setVisibility(Button.GONE);
-                selectActualDate.setClickable(false);
-                selectPlannedEndDate.setClickable(false);
+                Intent iBackToDetailBook = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+                iBackToDetailBook.putExtra("id", lending.getBook_id());
+                startActivity(iBackToDetailBook);
             }
+        });
+    }
+
+    private void handleExistingLending(Intent i) {
+        lending = dataBaseHelper.getLending(i.getIntExtra("lendingId",0));
+
+        nameView.setText(lending.getLender());
+        commentView.setText(lending.getComment());
+        selectActualDate.setText(lending.getStart());
+        selectPlannedEndDate.setText(lending.getPlanned_end());
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmLending();
+            }
+        });
+
+        isBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bringLendingBack();
+            }
+        });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { {
+                    deleteLending();
+                }
+            }
+        });
+
+        // hide returned button
+        if(lending.getIsBack()) {
+            isBackButton.setVisibility(Button.GONE);
+            selectActualDate.setClickable(false);
+            selectPlannedEndDate.setClickable(false);
         }
+    }
+
+    private void bringLendingBack() {
+        lending.setIsBack(true);
+        dataBaseHelper.editLending(lending);
+
+        // direkt zurückspringen oder nicht? Wenn ja müssen andere Änderungen auch übernommen werden
+        /*
+        Intent iBackToDetailBook3 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+        iBackToDetailBook3.putExtra("id", lending.getBook_id());
+        startActivity(iBackToDetailBook3);
+        */
+    }
+
+    private void confirmLending() {
+        lending = new Lending(lending.getId(),lending.getBook_id(),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),lending.getIsBack(),String.valueOf(commentView.getText()));
+        dataBaseHelper.editLending(lending);
+
+        Intent iBackToDetailBook2 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+        iBackToDetailBook2.putExtra("id", lending.getBook_id());
+        startActivity(iBackToDetailBook2);
+    }
+
+    public void deleteLending() {
+        new AlertDialog.Builder(DetailActivityLending.this)
+                .setTitle(R.string.dialogDeleteLending)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Toast.makeText(DetailActivityLending.this, "Yaay", Toast.LENGTH_SHORT).show();
+                        dataBaseHelper.remLending(lending.getId());
+
+                        Intent iBackToDetailBook4 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+                        iBackToDetailBook4.putExtra("id", lending.getBook_id());
+                        startActivity(iBackToDetailBook4);
+                    }})
+                .setNegativeButton(android.R.string.cancel, null).show();
     }
 }

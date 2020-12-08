@@ -3,6 +3,8 @@ package com.example.buchverwaltung;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -51,6 +53,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     List<ApiResponseBook> bookList;
     List<Book> normalBookList;
 
+    BookAdapter ba;
+    RecyclerView bookListView;
     Context context;
 
     public DetailActivityBookAdding() {
@@ -66,11 +70,15 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         context = getApplicationContext();
+        bookListView = (RecyclerView) findViewById(R.id.mainBooksRecyclerView);
 
         searchIsbnView = findViewById(R.id.detailBookAddingSearchViewIsbn);
+
+        /*
         coverView = findViewById(R.id.detailBookAddingCover);
         titleView = findViewById(R.id.detailBookAddingTitle);
         authorView = findViewById(R.id.detailBookAddingAuthor);
+         */
         confirmButton = findViewById(R.id.detailBookAddingButtonAdd);
         group = findViewById(R.id.detailBookAddingGroupPreview);
 
@@ -87,6 +95,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 //isbn = "361301548X";
                 //isbn = "9789385031595";
                 isbn = query;
+                /*
                 getTheBook(new Callback<BookApiResult>() {
                     @Override
                     public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
@@ -140,6 +149,79 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         Toast.makeText(context, R.string.apiErrorFailure, Toast.LENGTH_LONG).show();
                     }
                 },isbn);
+                 */
+
+                getBooksByTitle(new Callback<BookApiResult>() {
+                    @Override
+                    public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
+                        Log.d("tag0","hallo wir sind on Response");
+                        searchIsbnView.clearFocus();
+                        Log.d("tag0","Anzahl Treffer: " + response.body().getTotalItems());
+                        // check if there is a book in the answer
+                        if(response.body().getTotalItems().equals("0")) {
+                            Log.d("tag0","no books on answer");
+                            Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+
+                        List<ApiResponseBook> responseBooks = response.body().getBook();
+                        List<Book> foundBooks = null;
+                        int bookCounter = 0;
+
+                        while(!responseBooks.isEmpty()) {
+                            ApiResponseBook bo = responseBooks.remove(bookCounter);
+                            Log.d("tag0","Book Counter: " + bookCounter);
+                            bookCounter++;
+                            foundBooks.add(new Book(bo.getIndustryIdentifiers().get(0).getIsbn(), bo.getApiDetails().getTitle(), bo.getApiDetails().getAuthors().get(0), false, 0, ""));
+                        }
+
+
+                        ba = new BookAdapter(foundBooks, context);
+                        bookListView.setLayoutManager(new LinearLayoutManager(context,RecyclerView.VERTICAL,false));
+                        bookListView.setAdapter(ba);
+
+                        /*
+                        // built the correct thumbnail url (https instead of http)
+                        String thumbnailPath = book.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
+                        String[] parts = thumbnailPath.split(":");
+                        String newThumbnailPath = parts[0] + "s:" + parts[1];
+
+                        // load cover into the book preview
+                        Picasso.get().load(newThumbnailPath).error(R.drawable.ic_emptythumbnail).into(coverView);
+
+                        theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+
+                        // show the book
+                        group.setVisibility(group.VISIBLE);
+                        titleView.setText(theBook.getTitle());
+                        authorView.setText(theBook.getAuthor());
+                         */
+
+                        // show confirm button
+                        confirmButton.setVisibility(View.VISIBLE);
+
+                        // add book to the app
+                        confirmButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // store the cover
+                                //Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
+                                // add the book to the database
+                                //dataBaseHelper.addBook(theBook);
+                                Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
+                                startActivity(iBacktoMain);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call<BookApiResult> call, Throwable t) {
+                        Log.d("tag0","onFailure oben");
+                        searchIsbnView.clearFocus();
+                        Toast.makeText(context, R.string.apiErrorFailure, Toast.LENGTH_LONG).show();
+                    }
+                },isbn);
 
                 return false;
             }
@@ -154,6 +236,39 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
     public void getTheBook(Callback<BookApiResult> callback, String isbn){
         br.getABook(new Callback<BookApiResult>(){
+            @Override
+            public void onResponse(@NotNull Call<BookApiResult> call, @NotNull Response<BookApiResult> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        Log.d("tag0", "getBookList: onResponse -> SUCCESSFUL");
+                        callback.onResponse(call,response);
+                        //call.enqueue(callback);
+                        return;
+                    }
+                    catch(Exception e){
+                        Log.d("tag0", "getBookList: onResponse -> Exception: "+ e);
+                        return;
+                    }
+                }
+                else {
+                    Log.d("tag0", "getPersonList: onResponse -> NOT SUCCESSFUL");
+                    Toast.makeText(context, R.string.apiErrorResponse, Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<BookApiResult> call, @NotNull Throwable t) {
+                Log.d("tag0", "getBookList: onResponse -> FAILED \n" + t);
+                callback.onFailure(call,t);
+                //call.enqueue(callback);
+                //return;
+            }
+        }, isbn);
+    }
+
+    public void getBooksByTitle(Callback<BookApiResult> callback, String title){
+        br.getBooksByTitle(new Callback<BookApiResult>(){
             @Override
             public void onResponse(@NotNull Call<BookApiResult> call, @NotNull Response<BookApiResult> response) {
                 if (response.isSuccessful()) {

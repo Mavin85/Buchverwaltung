@@ -2,31 +2,34 @@ package com.example.buchverwaltung;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class ApiResponseBook {
 
-    private String isbn;
+    @SerializedName("industryIdentifiers")
+    private List<ApiIndustryIdentifier> industryIdentifiers;
     @SerializedName("volumeInfo")
     private ApiDetails apiDetails;
 
-    public ApiResponseBook(String isbn, ApiDetails volumeInfo) {
-        this.isbn = isbn;
-        this.apiDetails = volumeInfo;
+    public ApiResponseBook(List<ApiIndustryIdentifier> industryIdentifiers, ApiDetails apiDetails) {
+        this.industryIdentifiers = industryIdentifiers;
+        this.apiDetails = apiDetails;
     }
 
     @Override
     public String toString() {
         return "ApiResponseBook{" +
-                "isbn='" + isbn + '\'' +
+                "industryIdentifiers=" + industryIdentifiers +
                 ", apiDetails=" + apiDetails +
                 '}';
     }
 
-    public String getIsbn() {
-        return isbn;
+    public List<ApiIndustryIdentifier> getIndustryIdentifiers() {
+        return industryIdentifiers;
     }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
+    public void setIndustryIdentifiers(List<ApiIndustryIdentifier> industryIdentifiers) {
+        this.industryIdentifiers = industryIdentifiers;
     }
 
     public ApiDetails getApiDetails() {
@@ -36,5 +39,4 @@ public class ApiResponseBook {
     public void setApiDetails(ApiDetails apiDetails) {
         this.apiDetails = apiDetails;
     }
-
 }
