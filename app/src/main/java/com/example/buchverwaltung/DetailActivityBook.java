@@ -14,6 +14,7 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,8 +31,9 @@ import java.util.List;
 public class DetailActivityBook extends AppCompatActivity {
 
     RoundedImageView coverView;
-    TextView titleView, authorView, isbnView, commentView;
+    TextView titleView, authorView, isbnView;
     ImageView favouriteIcon;
+    EditText commentView;
     Button deleteButton, newLendingButton;
 
 
@@ -157,17 +159,23 @@ public class DetailActivityBook extends AppCompatActivity {
         newLendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveComment();
                 Intent iAddALending = new Intent(DetailActivityBook.this, DetailActivityLending.class);
                 iAddALending.putExtra("bookId", b.getId());
                 startActivity(iAddALending);
             }
         });
-
     }
 
     @Override
     public void onBackPressed() {
+        saveComment();
         Intent iBacktoMain = new Intent(DetailActivityBook.this, MainActivity.class);
         startActivity(iBacktoMain);
+    }
+
+    public void saveComment() {
+        b.setComment(commentView.getText().toString());
+        dataBaseHelper.editBook(b);
     }
 }

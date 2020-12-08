@@ -153,15 +153,12 @@ public class DetailActivityLending extends AppCompatActivity {
             isBackButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    lending.setIsBack(true);
+                    lending = new Lending(lending.getId(),lending.getBook_id(),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),true,String.valueOf(commentView.getText()));
                     dataBaseHelper.editLending(lending);
-
-                    // direkt zurückspringen oder nicht? Wenn ja müssen andere Änderungen auch übernommen werden
-                    /*
                     Intent iBackToDetailBook3 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
                     iBackToDetailBook3.putExtra("id", lending.getBook_id());
                     startActivity(iBackToDetailBook3);
-                    */
+
                 }
             });
 
