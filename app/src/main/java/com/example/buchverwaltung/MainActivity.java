@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView bookListView;
     ImageView addBookView;
     ImageView filterRecyclerView;
-
     private int filterCount;
 
     //Definitions of Sorting Functions for the RecyclerView
@@ -70,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // store the cover
+        Picasso.get().load(R.drawable.bookexamplecover).into(DetailActivityBookAdding.picassoImageTarget(this, "coverDir", "examplecover" + "_cover.jpeg"));
     }
 
     @Override

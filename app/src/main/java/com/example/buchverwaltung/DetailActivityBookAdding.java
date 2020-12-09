@@ -184,38 +184,38 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                             apiResponseBook = apiBookList.remove(0);
                             Log.d("tag0",apiResponseBook.getApiDetails().getTitle());
 
-
-                            if (apiResponseBook.getApiDetails().getAuthors() == null) {
-                                if(apiResponseBook.getIndustryIdentifiers().get(0).getIsbn() == null) {
-                                    if (apiResponseBook.getApiDetails().getTitle() == null) {
-                                        //Author,Isbn und Titel sind nicht existent
-                                        theBook = new Book("keine ISBN", "kein Titel", "kein Author", false, R.drawable.bookexamplecover, "");
-                                    } else {
-                                        //Author und Isbn sind nicht existent
-                                        theBook = new Book("keine ISBN", apiResponseBook.getApiDetails().getTitle(), "kein Author", false, R.drawable.bookexamplecover, "");
-                                    }
-                                }
-                                 else {
-
-                                    }
-                            else {
-                                theBook = new Book("apiResponseBook.getIndustryIdentifiers().get(0).getIsbn()", apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+                            if(apiResponseBook.getIndustryIdentifiers() == null) {
+                                List<ApiIndustryIdentifier> noIsbnList = Arrays.asList(new ApiIndustryIdentifier("keine ISBN"));
+                                apiResponseBook.setIndustryIdentifiers(noIsbnList);
                             }
+//
+                            if(apiResponseBook.getApiDetails().getTitle() == null) {
+                                apiResponseBook.getApiDetails().setTitle("kein Titel");
+                            }
+//
+                            if(apiResponseBook.getApiDetails().getAuthors() == null) {
+                                List<String> noAuthorList = Arrays.asList("kein Author", "kein Author");
+                                apiResponseBook.getApiDetails().setAuthors(noAuthorList);
+                            }
+
+                            theBook = new Book("apiResponseBook.getIndustryIdentifiers().get(0).getIsbn()", apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
 
                             Log.d("tag0", theBook.getTitle());
 
                             //built the correct thumbnail url (https instead of http)
-                            String thumbnailPath = apiResponseBook.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
-                            String[] parts = thumbnailPath.split(":");
-                            String newThumbnailPath = parts[0] + "s:" + parts[1];
-                            theBook.setCoverString(newThumbnailPath);
+                            if(apiResponseBook.getApiDetails().getImageLinks().getThumbnail() == null) {
+
+                            }
+                            else{
+                                String thumbnailPath = apiResponseBook.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
+                                String[] parts = thumbnailPath.split(":");
+                                String newThumbnailPath = parts[0] + "s:" + parts[1];
+                                theBook.setCoverString(newThumbnailPath);
+                            }
+
 
                             normalBookList.add(theBook);
                         }
-
-
-
-
 
                         ba.notifyDataSetChanged();
 
@@ -330,7 +330,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     }
 
     // method to save the book cover with picasso
-    private Target picassoImageTarget(Context context, final String imageDir, final String imageName) {
+    static Target picassoImageTarget(Context context, final String imageDir, final String imageName) {
         Log.d("picassoImageTarget", " picassoImageTarget");
         ContextWrapper cw = new ContextWrapper(context);
         final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE); // path to /data/data/yourapp/app_imageDir
