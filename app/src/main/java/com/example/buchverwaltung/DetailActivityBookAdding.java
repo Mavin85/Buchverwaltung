@@ -186,8 +186,18 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
 
                             if (apiResponseBook.getApiDetails().getAuthors() == null) {
-                                theBook = new Book("apiResponseBook.getIndustryIdentifiers().get(0).getIsbn()", apiResponseBook.getApiDetails().getTitle(), "kein Author", false, R.drawable.bookexamplecover, "");
-                            }
+                                if(apiResponseBook.getIndustryIdentifiers().get(0).getIsbn() == null) {
+                                    if (apiResponseBook.getApiDetails().getTitle() == null) {
+                                        //Author,Isbn und Titel sind nicht existent
+                                        theBook = new Book("keine ISBN", "kein Titel", "kein Author", false, R.drawable.bookexamplecover, "");
+                                    } else {
+                                        //Author und Isbn sind nicht existent
+                                        theBook = new Book("keine ISBN", apiResponseBook.getApiDetails().getTitle(), "kein Author", false, R.drawable.bookexamplecover, "");
+                                    }
+                                }
+                                 else {
+
+                                    }
                             else {
                                 theBook = new Book("apiResponseBook.getIndustryIdentifiers().get(0).getIsbn()", apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
                             }
