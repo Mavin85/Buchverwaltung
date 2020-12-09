@@ -23,4 +23,7 @@
     <string name="apiNoBookReceived" >Keine Bücher gefunden!</string>
     <string name="dialogDeleteBook" >Möchten Sie das Buch löschen?</string>
     <string name="dialogDeleteLending">Möchten Sie den Ausleihvorgang löschen?</string>
+    <string name="detailLendingButtonAddManual">Manuell einfügen</string>
+    <string name="detailLendingEditTextTitle">Titel</string>
+    <string name="detailLendingEditTextAuthor">Autor</string>
 </resources>

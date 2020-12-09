@@ -11,8 +11,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +39,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
     SearchView searchIsbnView;
     ImageView coverView;
-    TextView titleView, authorView;
-    Button confirmButton;
+    TextView titleView, authorView, isbnManual, titleManual, authorManual;
+    Button confirmButton, addManualButton;
     Group group;
     String isbn;
 
@@ -73,9 +75,17 @@ public class DetailActivityBookAdding extends AppCompatActivity {
         authorView = findViewById(R.id.detailBookAddingAuthor);
         confirmButton = findViewById(R.id.detailBookAddingButtonAdd);
         group = findViewById(R.id.detailBookAddingGroupPreview);
+        addManualButton = findViewById(R.id.detailBookAddingButtonManual);
+        isbnManual = findViewById(R.id.detailBookisbnAddManual);
+        titleManual = findViewById(R.id.detailBookTitleAddManual);
+        authorManual = findViewById(R.id.detailBookAuthorAddManual);
 
         group.setVisibility(group.GONE);
         confirmButton.setVisibility(View.GONE);
+        addManualButton.setVisibility(View.GONE);
+        isbnManual.setVisibility(View.GONE);
+        titleManual.setVisibility(View.GONE);
+        authorManual.setVisibility(View.GONE);
 
         dataBaseHelper = new DataBaseHelper(DetailActivityBookAdding.this);
 
@@ -95,7 +105,37 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         // check if there is a book in the answer
                         if(response.body().getTotalItems().equals("0")) {
                             Log.d("tag0","no books on answer");
-                            Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_LONG).show();
+                            Toast toast = Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL, 0, 0);
+                            toast.show();
+                            addManualButton.setVisibility(View.VISIBLE);
+
+                            //show manual adding components
+                            addManualButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    addManualButton.setVisibility(View.GONE);
+                                    isbnManual.setVisibility(View.VISIBLE);
+                                    titleManual.setVisibility(View.VISIBLE);
+                                    authorManual.setVisibility(View.VISIBLE);
+                                    confirmButton.setVisibility(View.VISIBLE);
+                                }
+                            });
+
+                            // add a book manual to the app
+                            confirmButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // store the cover
+                                    //Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
+                                    // add the book to the database
+                                    theBook = new Book(String.valueOf(isbnManual.getText()), String.valueOf(titleManual.getText()), String.valueOf(authorManual.getText()), false, R.drawable.bookexamplecover, "");
+                                    dataBaseHelper.addBook(theBook);
+                                    Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
+                                    startActivity(iBacktoMain);
+                                }
+                            });
+
                             return;
                         }
 

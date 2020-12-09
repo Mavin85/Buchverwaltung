@@ -106,12 +106,83 @@
         style="@style/buttonStyleDefault"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/detailLendingButtonConfirm"
         app:layout_constraintWidth_percent="0.45"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/detailBookAddingGuidelineVertical50"
+        />
+
+    <EditText
+        android:id="@+id/detailBookTitleAddManual"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@id/detailBookAddingSearchViewIsbn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/detailLendingEditTextTitle"
+        android:layout_marginRight="10dp"
+        android:textSize="22dp"
+        android:maxLines="1"
+        android:gravity="left"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        app:layout_goneMarginRight="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/detailBookisbnAddManual"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@id/detailBookTitleAddManual"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="ISBN"
+        android:layout_marginRight="10dp"
+        android:textSize="22dp"
+        android:maxLines="1"
+        android:gravity="left"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        app:layout_goneMarginRight="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+       />
+
+    <EditText
+        android:id="@+id/detailBookAuthorAddManual"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@id/detailBookisbnAddManual"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/detailLendingEditTextAuthor"
+        android:layout_marginRight="10dp"
+        android:textSize="22dp"
+        android:maxLines="1"
+        android:gravity="left"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        app:layout_goneMarginRight="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        />
+
+    <Button
+        android:id="@+id/detailBookAddingButtonManual"
+        style="@style/buttonStyleDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/detailLendingButtonAddManual"
+        app:layout_constraintWidth_percent="0.45"
+        app:layout_constraintBottom_toTopOf="@id/detailBookAddingButtonAdd"
+        app:layout_constraintEnd_toEndOf="@id/detailBookAddingButtonAdd"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

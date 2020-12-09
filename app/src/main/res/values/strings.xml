@@ -23,4 +23,7 @@
     <string name="apiNoBookReceived" >No books found!</string>
     <string name="dialogDeleteBook" >Do you want to delete the book?</string>
     <string name="dialogDeleteLending">Do you want to delete the lending?</string>
+    <string name="detailLendingButtonAddManual">Add manual</string>
+    <string name="detailLendingEditTextTitle">Title</string>
+    <string name="detailLendingEditTextAuthor">Author</string>
 </resources>
