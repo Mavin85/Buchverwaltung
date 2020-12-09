@@ -42,9 +42,23 @@ public class BookAddingAdapter extends RecyclerView.Adapter<BookAddingAdapter.Bo
     @Override
     public void onBindViewHolder(@NonNull BookAddingAdapter.BookAddingViewHolder holder, int position) {
         Book b = bookList.get(position);
+        //holder.itemView.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+//
+        //        //store the cover
+        //        Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
+        //        add the book to the database
+        //        dataBaseHelper.addBook(theBook);
+        //        Intent i = new Intent(con, DetailActivityBook.class);
+        //        i.putExtra("id", b.getId());
+        //        con.startActivity(i);
+        //    }
+        //});
 
         holder.b_title.setText(b.getTitle());
         holder.b_author.setText(b.getAuthor());
+        Picasso.get().load(b.getCoverString()).into(holder.b_cover);
     }
 
     @Override

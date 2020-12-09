@@ -106,4 +106,12 @@ public class Book {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public String getCoverString() {
+        return coverString;
+    }
+
+    public void setCoverString(String coverString) {
+        this.coverString = coverString;
+    }
 }

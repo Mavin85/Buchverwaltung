@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -182,34 +183,31 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         while(!apiBookList.isEmpty()) {
                             apiResponseBook = apiBookList.remove(0);
                             Log.d("tag0",apiResponseBook.getApiDetails().getTitle());
-                            theBook = new Book("", apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
-                            Log.d("tag0",theBook.getTitle());
+
+
+                            if (apiResponseBook.getApiDetails().getAuthors() == null) {
+                                theBook = new Book("apiResponseBook.getIndustryIdentifiers().get(0).getIsbn()", apiResponseBook.getApiDetails().getTitle(), "kein Author", false, R.drawable.bookexamplecover, "");
+                            }
+                            else {
+                                theBook = new Book("apiResponseBook.getIndustryIdentifiers().get(0).getIsbn()", apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+                            }
+
+                            Log.d("tag0", theBook.getTitle());
+
+                            //built the correct thumbnail url (https instead of http)
+                            String thumbnailPath = apiResponseBook.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
+                            String[] parts = thumbnailPath.split(":");
+                            String newThumbnailPath = parts[0] + "s:" + parts[1];
+                            theBook.setCoverString(newThumbnailPath);
+
                             normalBookList.add(theBook);
-
-
                         }
 
 
+
+
+
                         ba.notifyDataSetChanged();
-
-                        //ApiResponseBook book = response.body().getBook().get(0);
-
-
-                        // built the correct thumbnail url (https instead of http)
-
-                        //String thumbnailPath = book.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
-                        //String[] parts = thumbnailPath.split(":");
-                        //String newThumbnailPath = parts[0] + "s:" + parts[1];
-
-                        // load cover into the book preview
-                        //Picasso.get().load(newThumbnailPath).error(R.drawable.ic_emptythumbnail).into(coverView);
-
-                        //theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
-
-                        // show the book
-                        //group.setVisibility(group.VISIBLE);
-                        //titleView.setText(theBook.getTitle());
-                        //authorView.setText(theBook.getAuthor());
 
                         // show confirm button
                         confirmButton.setVisibility(View.VISIBLE);
