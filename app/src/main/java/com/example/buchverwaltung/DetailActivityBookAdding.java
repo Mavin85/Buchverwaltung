@@ -3,6 +3,8 @@ package com.example.buchverwaltung;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -25,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,6 +41,9 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     SearchView searchIsbnView;
     ImageView coverView;
     TextView titleView, authorView;
+
+    RecyclerView bookResultView;
+
     Button confirmButton;
     Group group;
     String isbn;
@@ -48,11 +54,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     Book theBook;
     //BookRepo br;
     ApiResponseBook apiResponseBook;
-    List<ApiResponseBook> bookList;
-    List<Book> normalBookList;
+    List<ApiResponseBook> apiBookList;
+    List<Book> normalBookList = new ArrayList<>();
 
     Context context;
 
+    BookAddingAdapter ba;
     public DetailActivityBookAdding() {
     }
 
@@ -68,9 +75,10 @@ public class DetailActivityBookAdding extends AppCompatActivity {
         context = getApplicationContext();
 
         searchIsbnView = findViewById(R.id.detailBookAddingSearchViewIsbn);
-        coverView = findViewById(R.id.detailBookAddingCover);
-        titleView = findViewById(R.id.detailBookAddingTitle);
-        authorView = findViewById(R.id.detailBookAddingAuthor);
+        //coverView = findViewById(R.id.detailBookAddingCover);
+        //titleView = findViewById(R.id.detailBookAddingTitle);
+        //authorView = findViewById(R.id.detailBookAddingAuthor);
+        bookResultView = findViewById(R.id.detailBookAddingRecyclerView);
         confirmButton = findViewById(R.id.detailBookAddingButtonAdd);
         group = findViewById(R.id.detailBookAddingGroupPreview);
 
@@ -78,6 +86,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
         confirmButton.setVisibility(View.GONE);
 
         dataBaseHelper = new DataBaseHelper(DetailActivityBookAdding.this);
+
+        ba = new BookAddingAdapter(normalBookList,context);
+        bookResultView.setLayoutManager(new LinearLayoutManager(context,RecyclerView.VERTICAL,false));
+        bookResultView.setAdapter(ba);
+
+
 
         searchIsbnView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -162,23 +176,40 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         }
 
 
-                        ApiResponseBook book = response.body().getBook().get(0);
+                        apiBookList = response.body().getBook();
+                        normalBookList.clear();
+
+                        while(!apiBookList.isEmpty()) {
+                            apiResponseBook = apiBookList.remove(0);
+                            Log.d("tag0",apiResponseBook.getApiDetails().getTitle());
+                            theBook = new Book("", apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+                            Log.d("tag0",theBook.getTitle());
+                            normalBookList.add(theBook);
+
+
+                        }
+
+
+                        ba.notifyDataSetChanged();
+
+                        //ApiResponseBook book = response.body().getBook().get(0);
+
 
                         // built the correct thumbnail url (https instead of http)
 
-                        String thumbnailPath = book.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
-                        String[] parts = thumbnailPath.split(":");
-                        String newThumbnailPath = parts[0] + "s:" + parts[1];
+                        //String thumbnailPath = book.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
+                        //String[] parts = thumbnailPath.split(":");
+                        //String newThumbnailPath = parts[0] + "s:" + parts[1];
 
                         // load cover into the book preview
-                        Picasso.get().load(newThumbnailPath).error(R.drawable.ic_emptythumbnail).into(coverView);
+                        //Picasso.get().load(newThumbnailPath).error(R.drawable.ic_emptythumbnail).into(coverView);
 
-                        theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+                        //theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
 
                         // show the book
-                        group.setVisibility(group.VISIBLE);
-                        titleView.setText(theBook.getTitle());
-                        authorView.setText(theBook.getAuthor());
+                        //group.setVisibility(group.VISIBLE);
+                        //titleView.setText(theBook.getTitle());
+                        //authorView.setText(theBook.getAuthor());
 
                         // show confirm button
                         confirmButton.setVisibility(View.VISIBLE);
@@ -189,7 +220,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 // store the cover
-                                Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
+                                //Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
                                 // add the book to the database
                                 dataBaseHelper.addBook(theBook);
                                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
@@ -216,7 +247,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 return false;
             }
         });
+
+
     }
+
+
+
 
 
     public void getTheBook(Callback<BookApiResult> callback, String isbn){
@@ -227,8 +263,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                     try {
                         Log.d("tag0", "getBookList: onResponse -> SUCCESSFUL");
                         callback.onResponse(call,response);
-                        call.enqueue(callback);
-                        return;
+                        //call.enqueue(callback);
+                        //return;
                     }
                     catch(Exception e){
                         Log.d("tag0", "getBookList: onResponse -> Exception: "+ e);
@@ -261,7 +297,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         Log.d("tag0", "getBookList: onResponse -> SUCCESSFUL");
                         callback.onResponse(call,response);
                         //call.enqueue(callback);
-                        //return;
+                        return;
                     }
                     catch(Exception e){
                         Log.d("tag0", "getBookList: onResponse -> Exception: "+ e);

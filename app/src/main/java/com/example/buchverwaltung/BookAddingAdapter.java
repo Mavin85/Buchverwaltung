@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookAddingAdapter extends RecyclerView.Adapter<BookAddingAdapter.BookAddingViewHolder> {
-    List<ApiResponseBook> bookList;
+    List<Book> bookList;
     Context con;
 
-    public BookAddingAdapter(List<ApiResponseBook> bookList, Context con) {
+    public BookAddingAdapter(List<Book> bookList, Context con) {
         this.bookList = bookList;
         this.con = con;
     }
@@ -41,10 +41,10 @@ public class BookAddingAdapter extends RecyclerView.Adapter<BookAddingAdapter.Bo
 
     @Override
     public void onBindViewHolder(@NonNull BookAddingAdapter.BookAddingViewHolder holder, int position) {
-        ApiResponseBook b = bookList.get(position);
+        Book b = bookList.get(position);
 
-        holder.b_title.setText(b.getApiDetails().getTitle());
-        holder.b_author.setText(b.getApiDetails().getAuthors().get(0));
+        holder.b_title.setText(b.getTitle());
+        holder.b_author.setText(b.getAuthor());
     }
 
     @Override
