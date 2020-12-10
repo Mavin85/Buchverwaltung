@@ -184,11 +184,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                             apiResponseBook = apiBookList.remove(0);
                             Log.d("tag0",apiResponseBook.getApiDetails().getTitle());
 
-                            if(apiResponseBook.getIndustryIdentifiers() == null) {
+                            if(apiResponseBook.getApiDetails().getIndustryIdentifiers() == null) {
+                                //Log.d("tag0","Keine ISBN bei: " + apiResponseBook.getApiDetails().getTitle());
                                 List<ApiIndustryIdentifier> noIsbnList = Arrays.asList(new ApiIndustryIdentifier("keine ISBN"));
-                                apiResponseBook.setIndustryIdentifiers(noIsbnList);
+                                apiResponseBook.getApiDetails().setIndustryIdentifiers(noIsbnList);
                             }
-//
+
                             if(apiResponseBook.getApiDetails().getTitle() == null) {
                                 apiResponseBook.getApiDetails().setTitle("kein Titel");
                             }
@@ -198,9 +199,9 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                                 apiResponseBook.getApiDetails().setAuthors(noAuthorList);
                             }
 
-                            theBook = new Book("apiResponseBook.getIndustryIdentifiers().get(0).getIsbn()", apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+                            theBook = new Book(apiResponseBook.getApiDetails().getIndustryIdentifiers().get(0).getIsbn(), apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
 
-                            Log.d("tag0", theBook.getTitle());
+                            //Log.d("tag0", theBook.getTitle());
 
                             //built the correct thumbnail url (https instead of http)
                             if(apiResponseBook.getApiDetails().getImageLinks().getThumbnail() == null) {
