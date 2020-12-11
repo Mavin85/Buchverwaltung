@@ -70,7 +70,7 @@ public class DetailActivityBook extends AppCompatActivity {
         // load cover
         ContextWrapper cw = new ContextWrapper(DetailActivityBook.this);
         File directory = cw.getDir("coverDir", Context.MODE_PRIVATE);
-        File myImageFile = new File(directory, b.getIsbn() + "_cover.jpeg");
+        File myImageFile = new File(directory, b.getId() + "_cover.jpeg");
         coverView = findViewById(R.id.detailBookCover);
         Picasso.get().load(myImageFile).into(coverView);
 

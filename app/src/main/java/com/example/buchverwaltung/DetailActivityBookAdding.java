@@ -46,7 +46,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     RecyclerView bookResultView;
 
     Button confirmButton;
-    Group group;
+    Group groupByIsbn;
+    Group groupByTitle;
     String isbn;
 
     String title;
@@ -80,14 +81,16 @@ public class DetailActivityBookAdding extends AppCompatActivity {
         context = getApplicationContext();
 
         searchIsbnView = findViewById(R.id.detailBookAddingSearchViewIsbn);
-        //coverView = findViewById(R.id.detailBookAddingCover);
-        //titleView = findViewById(R.id.detailBookAddingTitle);
-        //authorView = findViewById(R.id.detailBookAddingAuthor);
+        coverView = findViewById(R.id.detailBookAddingCover);
+        titleView = findViewById(R.id.detailBookAddingTitle);
+        authorView = findViewById(R.id.detailBookAddingAuthor);
         bookResultView = findViewById(R.id.detailBookAddingRecyclerView);
         confirmButton = findViewById(R.id.detailBookAddingButtonAdd);
-        group = findViewById(R.id.detailBookAddingGroupPreview);
+        groupByIsbn = findViewById(R.id.detailBookAddingByIsbnPreview);
+        groupByTitle = findViewById(R.id.detailBookAddingByTitelRecyclerPreview);
 
-        group.setVisibility(group.GONE);
+        groupByTitle.setVisibility(groupByTitle.GONE);
+        groupByIsbn.setVisibility(groupByIsbn.GONE);
         confirmButton.setVisibility(View.GONE);
 
         dataBaseHelper = new DataBaseHelper(DetailActivityBookAdding.this);
@@ -107,7 +110,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 //isbn = "361301548X";
                 //isbn = "9789385031595";
                 isbn = query;
-                /*
+
                 getTheBook(new Callback<BookApiResult>() {
                     @Override
                     public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
@@ -115,8 +118,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         searchIsbnView.clearFocus();
                         // check if there is a book in the answer
                         if(response.body().getTotalItems().equals("0")) {
-                            Log.d("tag0","no books on answer");
-                            Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_LONG).show();
+                            Log.d("tag0","keine ISBN Antwort -> also nach Titel");
+
+
+
+
+
                             return;
                         }
 
@@ -131,24 +138,25 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         Picasso.get().load(newThumbnailPath).error(R.drawable.ic_emptythumbnail).into(coverView);
 
                         theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
-
+                        theBook.setCoverString(newThumbnailPath);
                         // show the book
-                        group.setVisibility(group.VISIBLE);
+                        groupByIsbn.setVisibility(groupByIsbn.VISIBLE);
                         titleView.setText(theBook.getTitle());
                         authorView.setText(theBook.getAuthor());
 
                         // show confirm button
-                        confirmButton.setVisibility(View.VISIBLE);
+                        //confirmButton.setVisibility(View.VISIBLE);
 
                         // add book to the app
                         confirmButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                // store the cover
-                                Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
                                 // add the book to the database
                                 dataBaseHelper.addBook(theBook);
+                                // store the cover
+                                Picasso.get().load(theBook.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, "coverDir", dataBaseHelper.getBookByTitle(theBook.getTitle()).get(0).getId() + "_cover.jpeg"));
                                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
+
                                 startActivity(iBacktoMain);
                             }
                         });
@@ -161,8 +169,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         Toast.makeText(context, R.string.apiErrorFailure, Toast.LENGTH_LONG).show();
                     }
                 },isbn);
-                 */
 
+                /*
                 getBooksByTitle(new Callback<BookApiResult>() {
                     @Override
                     public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
@@ -253,6 +261,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                     }
                 },isbn);
 
+
+                 */
                 return false;
             }
 
