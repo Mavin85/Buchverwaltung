@@ -233,6 +233,20 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
                         ApiResponseBook book = response.body().getBook().get(0);
 
+                        if(book.getApiDetails().getIndustryIdentifiers() == null) {
+                            List<ApiIndustryIdentifier> noIsbnList = Arrays.asList(new ApiIndustryIdentifier(getString(R.string.noIsbnReceived)));
+                            book.getApiDetails().setIndustryIdentifiers(noIsbnList);
+                        }
+
+                        if(book.getApiDetails().getTitle() == null) {
+                            book.getApiDetails().setTitle(getString(R.string.noTitleReceived));
+                        }
+
+                        if(book.getApiDetails().getAuthors() == null) {
+                            List<String> noAuthorList = Arrays.asList(getString(R.string.noAuthorReceived));
+                            book.getApiDetails().setAuthors(noAuthorList);
+                        }
+
                         theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false,0, "");
                         if (book.getApiDetails().getImageLinks() == null) {
                             coverView.setImageResource(R.drawable.bookexamplecover);
