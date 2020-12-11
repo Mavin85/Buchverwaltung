@@ -3,8 +3,10 @@ package com.example.buchverwaltung;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,22 +59,26 @@ public class BookAddingAdapter extends RecyclerView.Adapter<BookAddingAdapter.Bo
                                 // add the book to the database
                                 dataBaseHelper = new DataBaseHelper(context);
                                 dataBaseHelper.addBook(b);
-                                // store the cover
-                                Picasso.get().load(b.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, "coverDir", dataBaseHelper.getBookByTitle(b.getTitle()).get(0).getId() + "_cover.jpeg"));
+                                if (b.getCoverString() != null) {
+                                    // store the cover
+                                    Picasso.get().load(b.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, "coverDir", dataBaseHelper.getBookByTitle(b.getTitle()).getId() + "_cover.jpeg"));
+                                }
                                 Intent i = new Intent(context, MainActivity.class);
                                 //context.startActivity(i);
                                 parentActivity.startActivity(i);
                             }})
                         .setNegativeButton(android.R.string.cancel, null).show();
-
             }
         });
 
-
-
+        if (b.getCoverInt() == 0) {
+            holder.b_cover.setImageResource(R.drawable.bookexamplecover);
+        }
+        else {
+            Picasso.get().load(b.getCoverString()).into(holder.b_cover);
+        }
         holder.b_title.setText(b.getTitle());
         holder.b_author.setText(b.getAuthor());
-        Picasso.get().load(b.getCoverString()).into(holder.b_cover);
     }
 
     @Override

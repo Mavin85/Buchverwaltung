@@ -104,7 +104,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
         searchIsbnView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
+                groupByTitle.setVisibility(groupByTitle.GONE);
+                groupByIsbn.setVisibility(groupByIsbn.GONE);
                 Log.d("tag0", "TextSubmit");
                 //isbn = "0735619670";
                 //isbn = "361301548X";
@@ -161,12 +162,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                                             apiResponseBook.getApiDetails().setAuthors(noAuthorList);
                                         }
 
-                                        theBook = new Book(apiResponseBook.getApiDetails().getIndustryIdentifiers().get(0).getIsbn(), apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+                                        theBook = new Book(apiResponseBook.getApiDetails().getIndustryIdentifiers().get(0).getIsbn(), apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, 0, "");
 
                                         //Log.d("tag0", theBook.getTitle());
 
                                         //built the correct thumbnail url (https instead of http)
-                                        if(apiResponseBook.getApiDetails().getImageLinks().getThumbnail() == null) {
+                                        if(apiResponseBook.getApiDetails().getImageLinks() == null) {
 
                                         }
                                         else{
@@ -174,6 +175,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                                             String[] parts = thumbnailPath.split(":");
                                             thumbnailPath = parts[0] + "s:" + parts[1];
                                             theBook.setCoverString(thumbnailPath);
+                                            theBook.setCoverInt(1);  //hat also Cover
                                         }
 
 
@@ -197,16 +199,22 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
                         ApiResponseBook book = response.body().getBook().get(0);
 
-                        // built the correct thumbnail url (https instead of http)
-                        String thumbnailPath = book.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
-                        String[] parts = thumbnailPath.split(":");
-                        String newThumbnailPath = parts[0] + "s:" + parts[1];
+                        theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false,0, "");
+                        if (book.getApiDetails().getImageLinks() == null) {
+                            coverView.setImageResource(R.drawable.bookexamplecover);
+                        }
+                        else {
+                            theBook.setCoverInt(1);
+                            // built the correct thumbnail url (https instead of http)
+                            String thumbnailPath = book.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
+                            String[] parts = thumbnailPath.split(":");
+                            String newThumbnailPath = parts[0] + "s:" + parts[1];
+                            theBook.setCoverString(newThumbnailPath);
 
-                        // load cover into the book preview
-                        Picasso.get().load(newThumbnailPath).error(R.drawable.ic_emptythumbnail).into(coverView);
+                            // load cover into the book preview
+                            Picasso.get().load(newThumbnailPath).error(R.drawable.ic_emptythumbnail).into(coverView);
+                        }
 
-                        theBook = new Book(isbn, book.getApiDetails().getTitle(), book.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
-                        theBook.setCoverString(newThumbnailPath);
                         // show the book
                         groupByIsbn.setVisibility(groupByIsbn.VISIBLE);
                         titleView.setText(theBook.getTitle());
@@ -221,8 +229,11 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                             public void onClick(View v) {
                                 // add the book to the database
                                 dataBaseHelper.addBook(theBook);
-                                // store the cover
-                                Picasso.get().load(theBook.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, "coverDir", dataBaseHelper.getBookByTitle(theBook.getTitle()).get(0).getId() + "_cover.jpeg"));
+                                if (theBook.getCoverInt() == 1) {
+                                    // store the cover
+                                    Picasso.get().load(theBook.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, "coverDir", dataBaseHelper.getBookByTitle(theBook.getTitle()).getId() + "_cover.jpeg"));
+                                }
+
                                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
 
                                 startActivity(iBacktoMain);
@@ -336,6 +347,8 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                groupByTitle.setVisibility(groupByTitle.GONE);
+                groupByIsbn.setVisibility(groupByIsbn.GONE);
                 return false;
             }
         });

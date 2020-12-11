@@ -67,12 +67,18 @@ public class DetailActivityBook extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(DetailActivityBook.this);
         b = dataBaseHelper.getBook(bookId);
 
-        // load cover
-        ContextWrapper cw = new ContextWrapper(DetailActivityBook.this);
-        File directory = cw.getDir("coverDir", Context.MODE_PRIVATE);
-        File myImageFile = new File(directory, b.getId() + "_cover.jpeg");
+
         coverView = findViewById(R.id.detailBookCover);
-        Picasso.get().load(myImageFile).into(coverView);
+        if(b.getCoverInt() == 0) {
+            coverView.setImageResource(R.drawable.bookexamplecover);
+        }
+        else {
+            // load cover
+            ContextWrapper cw = new ContextWrapper(DetailActivityBook.this);
+            File directory = cw.getDir("coverDir", Context.MODE_PRIVATE);
+            File myImageFile = new File(directory, b.getId() + "_cover.jpeg");
+            Picasso.get().load(myImageFile).into(coverView);
+        }
 
         titleView = findViewById(R.id.detailBookTitle);
         titleView.setText(b.getTitle());
@@ -131,7 +137,7 @@ public class DetailActivityBook extends AppCompatActivity {
                                 // delete the cover
                                 // exapmle path: /data/data/com.example.buchverwaltung/app_coverDir/0735619670_cover.jpeg
                                 String baseDir = DetailActivityBook.this.getFilesDir().getPath().replace("files", "");
-                                String coverDir = baseDir + "app_coverDir/" + b.getIsbn() + "_cover.jpeg";
+                                String coverDir = baseDir + "app_coverDir/" + b.getId() + "_cover.jpeg";
                                 File file = new File(coverDir);
                                 if(file.exists()){
                                     try {

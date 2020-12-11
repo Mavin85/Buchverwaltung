@@ -17,7 +17,7 @@
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/detailBookAddingByTitelRecyclerPreview"
-        app:constraint_referenced_ids="detailBookAddingByTitelRecyclerPreview"
+        app:constraint_referenced_ids="detailBookAddingRecyclerView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />

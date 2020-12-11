@@ -25,6 +25,6 @@
     <string name="dialogDeleteLending">Do you want to delete the lending?</string>
     <string name="dialogAddBook">Do you want to add the book?</string>
     <string name="noIsbnReceived">No ISBN</string>
-    <string name="noTitleReceived">No title</string>
-    <string name="noAuthorReceived">No author</string>string>
+    <string name="noTitleReceived">No Title</string>
+    <string name="noAuthorReceived">No Author</string>string>
 </resources>
