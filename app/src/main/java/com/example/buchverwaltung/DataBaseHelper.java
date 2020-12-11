@@ -41,9 +41,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // creates the db on the first launch of the app
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableBook = "CREATE TABLE " + BOOK + " (" + BOOK_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + ISBN + " Text, " + TITLE + " String, " + AUTHOR + " String, " + COVER + " int, " + FAVOURITE + " int, " + COMMENT_BOOK + " String)";
+        String createTableBook = "CREATE TABLE " + BOOK + " (" + BOOK_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + ISBN + " Text, " + TITLE + " Text, " + AUTHOR + " Text, " + COVER + " int, " + FAVOURITE + " int, " + COMMENT_BOOK + " Text)";
         db.execSQL(createTableBook);
-        String createTableBorrowingProcess = "CREATE TABLE " + BORROWING_PROCESS + " (" + BORROWING_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + BOOK_ID + " int, " + BORROWER + " String, " + BEGINNING + " String, " + END + " String, " + COMPLETED + " int, " + COMMENT_BORROWING + " String)";
+        String createTableBorrowingProcess = "CREATE TABLE " + BORROWING_PROCESS + " (" + BORROWING_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + BOOK_ID + " int, " + BORROWER + " Text, " + BEGINNING + " Text, " + END + " Text, " + COMPLETED + " int, " + COMMENT_BORROWING + " Text)";
         db.execSQL(createTableBorrowingProcess);
     }
 
@@ -64,7 +64,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void addBook(Book book) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-
         cv.put(ISBN, book.getIsbn());
         cv.put(TITLE, book.getTitle());
         cv.put(AUTHOR, book.getAuthor());
@@ -192,7 +191,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public List<Book> getBooks(String bookQuery) {
         List<Book> bookList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
+
         Cursor cursor = db.rawQuery(bookQuery, null);
+
 
         try {
             if(cursor.moveToFirst()) {
@@ -237,6 +238,53 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public List<Book> getBorrowedBooks() {
         return getBooks("SELECT * FROM Borrowing_Process b LEFT JOIN Book bo ON bo.book_id = b.book_id where completed = 0;");
     }
+
+    // returns a book by title
+    public List<Book> getBookByTitle2(String title) {
+        return getBooks("SELECT * FROM Book WHERE title = '" + title + "';");
+    }
+
+
+    public Book getBookByTitle(String title) {
+        String sql = "SELECT * FROM Book WHERE title = ?";
+        String[] selectionArgs = new String[] {
+                title
+        };
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql,selectionArgs);
+        cursor.moveToFirst();
+
+        Book newBook = null;
+        try {
+            if(cursor.moveToFirst()) {
+                do {
+                    int bookId = cursor.getInt(cursor.getColumnIndex("book_id"));
+                    String bookIsbn = cursor.getString(cursor.getColumnIndex("isbn"));
+                    String bookTitle = cursor.getString(cursor.getColumnIndex("title"));
+                    String bookAuthor = cursor.getString(cursor.getColumnIndex("author"));
+                    boolean bookFavourite = cursor.getInt(cursor.getColumnIndex("favourite")) == 1;
+                    int bookCover = cursor.getInt(cursor.getColumnIndex("cover"));
+                    String bookComment = cursor.getString(cursor.getColumnIndex("comment_book"));
+
+                    newBook = new Book(bookId,bookIsbn,bookTitle,bookAuthor,bookFavourite,bookCover,bookComment);
+
+                } while (cursor.moveToNext());
+            }
+        }
+        catch(Exception e) {
+            Log.e("getBooks: " + "sql", e.getMessage());
+        }
+
+        cursor.close();
+        return newBook;
+    }
+
+
+
+
+
+
+
 
 
     // returns borrowing processes for one book

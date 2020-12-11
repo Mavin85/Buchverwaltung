@@ -26,4 +26,8 @@
     <string name="detailLendingButtonAddManual">Manuell einfügen</string>
     <string name="detailLendingEditTextTitle">Titel</string>
     <string name="detailLendingEditTextAuthor">Autor</string>
+    <string name="dialogAddBook">Möchten Sie das Buch hinzufügen?</string>
+    <string name="noIsbnReceived">Keine ISBN</string>
+    <string name="noTitleReceived">Kein Titel</string>
+    <string name="noAuthorReceived">Kein Autor</string>string>
 </resources>

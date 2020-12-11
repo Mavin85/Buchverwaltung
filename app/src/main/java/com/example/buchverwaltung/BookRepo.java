@@ -31,4 +31,10 @@ public class BookRepo {
         apiResultCall.enqueue(callback);
     }
 
+    public void getBooksByTitle(Callback<BookApiResult> callback, String title){
+        String title_string = "intitle:" + title;
+        Call<BookApiResult> apiResultCall = bookApi.getBooks(title_string);
+        apiResultCall.enqueue(callback);
+    }
+
 }
