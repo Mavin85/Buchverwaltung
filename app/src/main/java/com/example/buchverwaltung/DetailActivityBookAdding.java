@@ -58,7 +58,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     ApiResponseBook apiResponseBook;
     List<ApiResponseBook> apiBookList;
     List<Book> normalBookList = new ArrayList<>();
-
+    RecyclerView bookResultView;
     Context context;
 
     BookAddingAdapter ba;
@@ -163,10 +163,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                                         confirmButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                // store the cover
-                                                //Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
-                                                // add the book to the database
-                                                theBook = new Book(String.valueOf(isbnManual.getText()), String.valueOf(titleManual.getText()), String.valueOf(authorManual.getText()), false, R.drawable.bookexamplecover, "");
+                                                theBook = new Book(String.valueOf(isbnManual.getText()), String.valueOf(titleManual.getText()), String.valueOf(authorManual.getText()), false, 0, "");
                                                 dataBaseHelper.addBook(theBook);
                                                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
                                                 startActivity(iBacktoMain);
@@ -286,101 +283,6 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                     }
                 },isbn);
 
-                /*
-                getBooksByTitle(new Callback<BookApiResult>() {
-                    @Override
-                    public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
-                        Log.d("tag0","hallo wir sind on Response");
-                        call.cancel();
-                        Log.d("tag0",String.valueOf(call.isCanceled()) + " " + String.valueOf(call.isExecuted()));
-
-                        searchIsbnView.clearFocus();
-                        Log.d("tag0","Anzahl Treffer: " + response.body().getTotalItems());
-                        // check if there is a book in the answer
-
-                        if(response.body().getTotalItems().equals("0")) {
-                            Log.d("tag0","no books on answer");
-                            Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_LONG).show();
-                            return;
-                        }
-
-
-                        apiBookList = response.body().getBook();
-                        normalBookList.clear();
-
-                        while(!apiBookList.isEmpty()) {
-                            apiResponseBook = apiBookList.remove(0);
-                            Log.d("tag0",apiResponseBook.getApiDetails().getTitle());
-
-                            if(apiResponseBook.getApiDetails().getIndustryIdentifiers() == null) {
-                                //Log.d("tag0","Keine ISBN bei: " + apiResponseBook.getApiDetails().getTitle());
-                                List<ApiIndustryIdentifier> noIsbnList = Arrays.asList(new ApiIndustryIdentifier("keine ISBN"));
-                                apiResponseBook.getApiDetails().setIndustryIdentifiers(noIsbnList);
-                            }
-
-                            if(apiResponseBook.getApiDetails().getTitle() == null) {
-                                apiResponseBook.getApiDetails().setTitle("kein Titel");
-                            }
-
-                            if(apiResponseBook.getApiDetails().getAuthors() == null) {
-                                List<String> noAuthorList = Arrays.asList("kein Author", "kein Author");
-                                apiResponseBook.getApiDetails().setAuthors(noAuthorList);
-                            }
-
-                            theBook = new Book(apiResponseBook.getApiDetails().getIndustryIdentifiers().get(0).getIsbn(), apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
-
-                            //Log.d("tag0", theBook.getTitle());
-
-                            //built the correct thumbnail url (https instead of http)
-                            if(apiResponseBook.getApiDetails().getImageLinks().getThumbnail() == null) {
-
-                            }
-                            else{
-                                thumbnailPath = apiResponseBook.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
-                                String[] parts = thumbnailPath.split(":");
-                                thumbnailPath = parts[0] + "s:" + parts[1];
-                                theBook.setCoverString(thumbnailPath);
-                            }
-
-
-                            normalBookList.add(theBook);
-                        }
-
-                        ba.notifyDataSetChanged();
-
-                        // show confirm button
-                        confirmButton.setVisibility(View.VISIBLE);
-
-                        // add book to the app
-
-                        confirmButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // store the cover
-                                Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
-                                // add the book to the database
-                                dataBaseHelper.addBook(theBook);
-                                // store the cover
-                                Picasso.get().load(thumbnailPath).into(picassoImageTarget(context, "coverDir", dataBaseHelper.getBookByTitle(theBook.getTitle()).get(0).getId() + "_cover.jpeg"));
-                                // back to MainActivity
-                                Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
-                                startActivity(iBacktoMain);
-                            }
-                        });
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<BookApiResult> call, Throwable t) {
-                        Log.d("tag0","onFailure oben");
-                        searchIsbnView.clearFocus();
-                        Toast.makeText(context, R.string.apiErrorFailure, Toast.LENGTH_LONG).show();
-                    }
-                },isbn);
-
-
-                 */
                 return false;
             }
 
@@ -391,13 +293,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 return false;
             }
         });
-
-
     }
-
-
-
-
 
     public void getTheBook(Callback<BookApiResult> callback, String isbn){
         br.getABook(new Callback<BookApiResult>(){
@@ -515,5 +411,3 @@ public class DetailActivityBookAdding extends AppCompatActivity {
         startActivity(iBackToMain);
     }
 }
-
-

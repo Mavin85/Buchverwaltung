@@ -157,45 +157,48 @@ public class DetailActivityLending extends AppCompatActivity {
             }
         });
 
-            isBackButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    lending = new Lending(lending.getId(),lending.getBook_id(),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),true,String.valueOf(commentView.getText()));
-                    dataBaseHelper.editLending(lending);
-                    Intent iBackToDetailBook3 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
-                    iBackToDetailBook3.putExtra("id", lending.getBook_id());
-                    startActivity(iBackToDetailBook3);
-
-                }
-            });
-
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) { {
-                        new AlertDialog.Builder(DetailActivityLending.this)
-                                .setTitle(R.string.dialogDeleteLending)
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        Toast.makeText(DetailActivityLending.this, "Yaay", Toast.LENGTH_SHORT).show();
-                                        dataBaseHelper.remLending(lending.getId());
-
-                                        Intent iBackToDetailBook4 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
-                                        iBackToDetailBook4.putExtra("id", lending.getBook_id());
-                                        startActivity(iBackToDetailBook4);
-                                    }})
-                                .setNegativeButton(android.R.string.cancel, null).show();
-                    }
-                }
-            });
-
-            // hide returned button
-            if(lending.getIsBack()) {
-                isBackButton.setVisibility(Button.GONE);
-                selectActualDate.setClickable(false);
-                selectPlannedEndDate.setClickable(false);
+        isBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lending = new Lending(lending.getId(),lending.getBook_id(),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),true,String.valueOf(commentView.getText()));
+                dataBaseHelper.editLending(lending);
+                Intent iBackToDetailBook3 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+                iBackToDetailBook3.putExtra("id", lending.getBook_id());
+                startActivity(iBackToDetailBook3);
             }
+        });
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(DetailActivityLending.this)
+                        .setTitle(R.string.dialogDeleteLending)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Toast.makeText(DetailActivityLending.this, "Yaay", Toast.LENGTH_SHORT).show();
+                                dataBaseHelper.remLending(lending.getId());
+                                Intent iBackToDetailBook4 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+                                iBackToDetailBook4.putExtra("id", lending.getBook_id());
+                                startActivity(iBackToDetailBook4);
+                            }})
+                        .setNegativeButton(android.R.string.cancel, null).show();
+
+            }
+        });
+        // hide returned button
+        if(lending.getIsBack()) {
+            isBackButton.setVisibility(Button.GONE);
+            selectActualDate.setClickable(false);
+            selectPlannedEndDate.setClickable(false);
         }
+    }
+
+    private void confirmLending() {
+        lending = new Lending(lending.getId(),lending.getBook_id(),String.valueOf(nameView.getText()),String.valueOf(selectActualDate.getText()),String.valueOf(selectPlannedEndDate.getText()),lending.getIsBack(),String.valueOf(commentView.getText()));
+        dataBaseHelper.editLending(lending);
+
+        Intent iBackToDetailBook2 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
+        iBackToDetailBook2.putExtra("id", lending.getBook_id());
+        startActivity(iBackToDetailBook2);
     }
 }
