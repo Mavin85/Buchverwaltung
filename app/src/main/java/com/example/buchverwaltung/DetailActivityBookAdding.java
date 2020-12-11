@@ -120,9 +120,77 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         if(response.body().getTotalItems().equals("0")) {
                             Log.d("tag0","keine ISBN Antwort -> also nach Titel");
 
+                            getBooksByTitle(new Callback<BookApiResult>() {
+                                @Override
+                                public void onResponse(Call<BookApiResult> call, Response<BookApiResult> response) {
+                                    Log.d("tag0","hallo wir sind on Response");
+                                    call.cancel();
+                                    Log.d("tag0",String.valueOf(call.isCanceled()) + " " + String.valueOf(call.isExecuted()));
+
+                                    searchIsbnView.clearFocus();
+                                    Log.d("tag0","Anzahl Treffer: " + response.body().getTotalItems());
+                                    // check if there is a book in the answer
+
+                                    if(response.body().getTotalItems().equals("0")) {
+                                        Log.d("tag0","no books on answer");
+                                        Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_LONG).show();
+                                        return;
+                                    }
+
+                                    groupByTitle.setVisibility(groupByTitle.VISIBLE);
+
+                                    apiBookList = response.body().getBook();
+                                    normalBookList.clear();
+
+                                    while(!apiBookList.isEmpty()) {
+                                        apiResponseBook = apiBookList.remove(0);
+                                        Log.d("tag0",apiResponseBook.getApiDetails().getTitle());
+
+                                        if(apiResponseBook.getApiDetails().getIndustryIdentifiers() == null) {
+                                            //Log.d("tag0","Keine ISBN bei: " + apiResponseBook.getApiDetails().getTitle());
+                                            List<ApiIndustryIdentifier> noIsbnList = Arrays.asList(new ApiIndustryIdentifier(getString(R.string.noIsbnReceived)));
+                                            apiResponseBook.getApiDetails().setIndustryIdentifiers(noIsbnList);
+                                        }
+
+                                        if(apiResponseBook.getApiDetails().getTitle() == null) {
+                                            apiResponseBook.getApiDetails().setTitle(getString(R.string.noTitleReceived));
+                                        }
+
+                                        if(apiResponseBook.getApiDetails().getAuthors() == null) {
+                                            List<String> noAuthorList = Arrays.asList(getString(R.string.noAuthorReceived));
+                                            apiResponseBook.getApiDetails().setAuthors(noAuthorList);
+                                        }
+
+                                        theBook = new Book(apiResponseBook.getApiDetails().getIndustryIdentifiers().get(0).getIsbn(), apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, R.drawable.bookexamplecover, "");
+
+                                        //Log.d("tag0", theBook.getTitle());
+
+                                        //built the correct thumbnail url (https instead of http)
+                                        if(apiResponseBook.getApiDetails().getImageLinks().getThumbnail() == null) {
+
+                                        }
+                                        else{
+                                            thumbnailPath = apiResponseBook.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
+                                            String[] parts = thumbnailPath.split(":");
+                                            thumbnailPath = parts[0] + "s:" + parts[1];
+                                            theBook.setCoverString(thumbnailPath);
+                                        }
 
 
+                                        normalBookList.add(theBook);
+                                    }
 
+                                    ba.notifyDataSetChanged();
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<BookApiResult> call, Throwable t) {
+                                    Log.d("tag0","onFailure oben");
+                                    searchIsbnView.clearFocus();
+                                    Toast.makeText(context, R.string.apiErrorFailure, Toast.LENGTH_LONG).show();
+                                }
+                            },isbn);
 
                             return;
                         }

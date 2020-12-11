@@ -15,7 +15,7 @@
     <string name="detailLendingTextViewPlannedDate">Wähle geplantes Ende aus</string>
     <string name="mainActivityFilterFavourites" >Nur Favoriten anzeigen</string>
     <string name="mainActivitySortingByTitel">Sortierung nach Titel</string>
-    <string name="mainActivitySortingByAuthor">Sortierung nach Author</string>
+    <string name="mainActivitySortingByAuthor">Sortierung nach Autor</string>
     <string name="detailLendingEditTextActualDate">aktuelles Datum</string>
     <string name="detailLendingEditTextPlannedDate">geplant zurück</string>
     <string name="apiErrorFailure">Fehler! Bitte Internetverbindung überprüfen und neu laden.</string>
@@ -23,5 +23,8 @@
     <string name="apiNoBookReceived" >Keine Bücher gefunden!</string>
     <string name="dialogDeleteBook" >Möchten Sie das Buch löschen?</string>
     <string name="dialogDeleteLending">Möchten Sie den Ausleihvorgang löschen?</string>
-    <string name="dialogAddBook">Möchten Sie das Buch hinzufügen?</string>string>
+    <string name="dialogAddBook">Möchten Sie das Buch hinzufügen?</string>
+    <string name="noIsbnReceived">Keine ISBN</string>
+    <string name="noTitleReceived">Kein Titel</string>
+    <string name="noAuthorReceived">Kein Autor</string>string>
 </resources>
