@@ -50,6 +50,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     String isbn;
 
     String title;
+    String thumbnailPath;
     DataBaseHelper dataBaseHelper;
 
     Book theBook;
@@ -61,6 +62,9 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     Context context;
 
     BookAddingAdapter ba;
+
+
+
     public DetailActivityBookAdding() {
     }
 
@@ -88,7 +92,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(DetailActivityBookAdding.this);
 
-        ba = new BookAddingAdapter(normalBookList,context);
+        ba = new BookAddingAdapter(normalBookList, context, this);
         bookResultView.setLayoutManager(new LinearLayoutManager(context,RecyclerView.VERTICAL,false));
         bookResultView.setAdapter(ba);
 
@@ -193,7 +197,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                             if(apiResponseBook.getApiDetails().getTitle() == null) {
                                 apiResponseBook.getApiDetails().setTitle("kein Titel");
                             }
-//
+
                             if(apiResponseBook.getApiDetails().getAuthors() == null) {
                                 List<String> noAuthorList = Arrays.asList("kein Author", "kein Author");
                                 apiResponseBook.getApiDetails().setAuthors(noAuthorList);
@@ -208,10 +212,10 @@ public class DetailActivityBookAdding extends AppCompatActivity {
 
                             }
                             else{
-                                String thumbnailPath = apiResponseBook.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
+                                thumbnailPath = apiResponseBook.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
                                 String[] parts = thumbnailPath.split(":");
-                                String newThumbnailPath = parts[0] + "s:" + parts[1];
-                                theBook.setCoverString(newThumbnailPath);
+                                thumbnailPath = parts[0] + "s:" + parts[1];
+                                theBook.setCoverString(thumbnailPath);
                             }
 
 
@@ -228,10 +232,11 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                         confirmButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                // store the cover
-                                //Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
                                 // add the book to the database
                                 dataBaseHelper.addBook(theBook);
+                                // store the cover
+                                Picasso.get().load(thumbnailPath).into(picassoImageTarget(context, "coverDir", dataBaseHelper.getBookByTitle(theBook.getTitle()).get(0).getId() + "_cover.jpeg"));
+                                // back to MainActivity
                                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this,MainActivity.class);
                                 startActivity(iBacktoMain);
                             }

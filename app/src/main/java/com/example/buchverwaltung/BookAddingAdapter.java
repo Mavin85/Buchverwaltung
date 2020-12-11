@@ -1,9 +1,10 @@
 package com.example.buchverwaltung;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +16,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BookAddingAdapter extends RecyclerView.Adapter<BookAddingAdapter.BookAddingViewHolder> {
     List<Book> bookList;
-    Context con;
+    Context context;
+    DataBaseHelper dataBaseHelper;
+    Activity parentActivity;
 
-    public BookAddingAdapter(List<Book> bookList, Context con) {
+    public BookAddingAdapter(List<Book> bookList, Context context, Activity parentActivity) {
         this.bookList = bookList;
-        this.con = con;
+        this.context = context;
+        this.parentActivity = parentActivity;
     }
 
     @NonNull
@@ -42,19 +44,31 @@ public class BookAddingAdapter extends RecyclerView.Adapter<BookAddingAdapter.Bo
     @Override
     public void onBindViewHolder(@NonNull BookAddingAdapter.BookAddingViewHolder holder, int position) {
         Book b = bookList.get(position);
-        //holder.itemView.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-//
-        //        //store the cover
-        //        Picasso.get().load(newThumbnailPath).into(picassoImageTarget(context, "coverDir", isbn + "_cover.jpeg"));
-        //        add the book to the database
-        //        dataBaseHelper.addBook(theBook);
-        //        Intent i = new Intent(con, DetailActivityBook.class);
-        //        i.putExtra("id", b.getId());
-        //        con.startActivity(i);
-        //    }
-        //});
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new AlertDialog.Builder(parentActivity)
+                        .setTitle(R.string.dialogAddBook)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // add the book to the database
+                                dataBaseHelper = new DataBaseHelper(context);
+                                dataBaseHelper.addBook(b);
+                                // store the cover
+                                Picasso.get().load(b.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, "coverDir", dataBaseHelper.getBookByTitle(b.getTitle()).get(0).getId() + "_cover.jpeg"));
+                                Intent i = new Intent(context, MainActivity.class);
+                                //context.startActivity(i);
+                                parentActivity.startActivity(i);
+                            }})
+                        .setNegativeButton(android.R.string.cancel, null).show();
+
+            }
+        });
+
+
 
         holder.b_title.setText(b.getTitle());
         holder.b_author.setText(b.getAuthor());

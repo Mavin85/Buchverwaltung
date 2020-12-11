@@ -124,13 +124,10 @@ public class DetailActivityBook extends AppCompatActivity {
             public void onClick(View v) {
                 new AlertDialog.Builder(DetailActivityBook.this)
                         .setTitle(R.string.dialogDeleteBook)
-                        //.setMessage(R.string.dialogDeleteBook)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Toast.makeText(DetailActivityBook.this, "Yaay", Toast.LENGTH_SHORT).show();
-
                                 // delete the cover
                                 // exapmle path: /data/data/com.example.buchverwaltung/app_coverDir/0735619670_cover.jpeg
                                 String baseDir = DetailActivityBook.this.getFilesDir().getPath().replace("files", "");

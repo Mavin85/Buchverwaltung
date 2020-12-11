@@ -54,7 +54,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         // load cover
         ContextWrapper cw = new ContextWrapper(con);
         File directory = cw.getDir("coverDir", Context.MODE_PRIVATE);
-        File myImageFile = new File(directory, b.getIsbn() + "_cover.jpeg");
+        // actually better, but not because not every book has an isbn
+        //File myImageFile = new File(directory, b.getIsbn() + "_cover.jpeg");
+        File myImageFile = new File(directory, b.getId() + "_cover.jpeg");
         Picasso.get().load(myImageFile).into(holder.b_cover);
 
         holder.b_title.setText(b.getTitle());

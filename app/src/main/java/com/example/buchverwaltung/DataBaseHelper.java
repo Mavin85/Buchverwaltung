@@ -238,6 +238,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return getBooks("SELECT * FROM Borrowing_Process b LEFT JOIN Book bo ON bo.book_id = b.book_id where completed = 0;");
     }
 
+    // returns a book by title
+    public List<Book> getBookByTitle(String title) {
+        return getBooks("SELECT * FROM Book WHERE title = '" + title + "';");
+    }
+
 
     // returns borrowing processes for one book
     public List<Lending> getLendings(int bookId) {

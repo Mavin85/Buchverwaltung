@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // store the cover
+        // store default the cover
         Picasso.get().load(R.drawable.bookexamplecover).into(DetailActivityBookAdding.picassoImageTarget(this, "coverDir", "examplecover" + "_cover.jpeg"));
     }
 
