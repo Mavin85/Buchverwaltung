@@ -128,16 +128,25 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Tag",allBooks.toString());
                         ba.notifyDataSetChanged();
                         Toast.makeText(MainActivity.this, R.string.mainActivitySortingByAuthor, Toast.LENGTH_SHORT).show();
-
                     }else {
                         if(filterCount == 2) {  //sorting by favourites
-                            filterCount = 0;
+                            filterCount = 3;
                             allBooks.clear();
                             allBooks.addAll(dataBaseHelper.getFavouriteBooks());
                             Collections.sort(allBooks, bookComparatorByTitle);
                             Log.d("Tag",allBooks.toString());
                             ba.notifyDataSetChanged();
                             Toast.makeText(MainActivity.this, R.string.mainActivityFilterFavourites, Toast.LENGTH_SHORT).show();
+                        }else {
+                            if(filterCount == 3) {  //sorting by favourites
+                                filterCount = 0;
+                                allBooks.clear();
+                                allBooks.addAll(dataBaseHelper.getBorrowedBooks());
+                                Collections.sort(allBooks, bookComparatorByTitle);
+                                Log.d("Tag",allBooks.toString());
+                                ba.notifyDataSetChanged();
+                                Toast.makeText(MainActivity.this, R.string.mainActivityFilterLended, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 }

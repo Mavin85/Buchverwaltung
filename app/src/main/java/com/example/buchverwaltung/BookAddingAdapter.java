@@ -3,24 +3,19 @@ package com.example.buchverwaltung;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class BookAddingAdapter extends RecyclerView.Adapter<BookAddingAdapter.BookAddingViewHolder> {
@@ -61,7 +56,7 @@ public class BookAddingAdapter extends RecyclerView.Adapter<BookAddingAdapter.Bo
                                 dataBaseHelper.addBook(b);
                                 if (b.getCoverString() != null) {
                                     // store the cover
-                                    Picasso.get().load(b.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, "coverDir", dataBaseHelper.getBookByTitle(b.getTitle()).getId() + "_cover.jpeg"));
+                                    Picasso.get().load(b.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, dataBaseHelper.getBookByTitle(b.getTitle()).getId() + "_cover.jpeg"));
                                 }
                                 Intent i = new Intent(context, MainActivity.class);
                                 //context.startActivity(i);

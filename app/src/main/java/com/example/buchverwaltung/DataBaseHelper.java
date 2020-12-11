@@ -239,12 +239,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return getBooks("SELECT * FROM Borrowing_Process b LEFT JOIN Book bo ON bo.book_id = b.book_id where completed = 0;");
     }
 
-    // returns a book by title
-    public List<Book> getBookByTitle2(String title) {
-        return getBooks("SELECT * FROM Book WHERE title = '" + title + "';");
-    }
-
-
     public Book getBookByTitle(String title) {
         String sql = "SELECT * FROM Book WHERE title = ?";
         String[] selectionArgs = new String[] {

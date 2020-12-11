@@ -29,5 +29,7 @@
     <string name="dialogAddBook">Möchten Sie das Buch hinzufügen?</string>
     <string name="noIsbnReceived">Keine ISBN</string>
     <string name="noTitleReceived">Kein Titel</string>
-    <string name="noAuthorReceived">Kein Autor</string>string>
+    <string name="noAuthorReceived">Kein Autor</string>
+    <string name="mainActivityFilterLended" >Nur ausgeliehene anzeigen</string>
+    <string name="detailBookAddingSearchHint">Suche nach Titel oder ISBN</string>string>
 </resources>
