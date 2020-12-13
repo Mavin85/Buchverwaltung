@@ -167,7 +167,6 @@ public class DetailActivityLending extends AppCompatActivity {
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Toast.makeText(DetailActivityLending.this, "Yaay", Toast.LENGTH_SHORT).show();
                                 dataBaseHelper.remLending(lending.getId());
                                 Intent iBackToDetailBook4 = new Intent(DetailActivityLending.this, DetailActivityBook.class);
                                 iBackToDetailBook4.putExtra("id", lending.getBook_id());
