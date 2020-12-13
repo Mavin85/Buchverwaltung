@@ -1,10 +1,5 @@
 package com.example.buchverwaltung;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -17,7 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -100,7 +99,7 @@ public class DetailActivityBook extends AppCompatActivity {
         } else {
             favouriteIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorRatingInactive)));
         }
-        //listener to change Favourite...
+        //listener to change Favourite
         favouriteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,7 +118,7 @@ public class DetailActivityBook extends AppCompatActivity {
 
         // filling RecyclerView with sorted by title
         lendingListView = (RecyclerView) findViewById(R.id.detailBookRecyclerViewLendings);
-        //sorting List by Title for first call of activity
+        // sorting List by Title for first call of activity
         Collections.sort(lendingList, lendingComparatorByStart);
         la = new LendingAdapter(lendingList,this);
         lendingListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));

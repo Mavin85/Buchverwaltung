@@ -6,7 +6,7 @@ import retrofit2.http.Query;
 
 public interface BookApi {
 
-    // url beispiel
+    // url examples
     // https://www.googleapis.com/books/v1/volumes?q=isbn:0735619670
     // https://www.googleapis.com/books/v1/volumes?q=intitle:harry%20potter
     // https://www.googleapis.com/books/v1/volumes?q=intitle:Harry&maxResults=2

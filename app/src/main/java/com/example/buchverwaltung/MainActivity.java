@@ -1,39 +1,15 @@
 package com.example.buchverwaltung;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.lang.reflect.Array;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -88,11 +64,8 @@ public class MainActivity extends AppCompatActivity {
         //dataBaseHelper.addBook(bookTest);
 
         allBooks = dataBaseHelper.getAllBooks();
-        //Toast.makeText(MainActivity.this, allBooks.toString(), Toast.LENGTH_LONG).show();
 
         int coverInt = R.drawable.bookexamplecover;
-        //Toast.makeText(MainActivity.this, String.valueOf(coverInt), Toast.LENGTH_LONG).show();
-        Log.d("Tag","dies ist ein test wie oft das kommt");
 
 
         // filling RecyclerView with sorted by title
@@ -116,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
                     allBooks.clear();
                     allBooks.addAll(dataBaseHelper.getAllBooks());
                     Collections.sort(allBooks, bookComparatorByTitle);
-                    Log.d("Tag",allBooks.toString());
                     ba.notifyDataSetChanged();
                     Toast.makeText(MainActivity.this, R.string.mainActivitySortingByTitel, Toast.LENGTH_SHORT).show();
                 }else {
@@ -125,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
                         allBooks.clear();
                         allBooks.addAll(dataBaseHelper.getAllBooks());
                         Collections.sort(allBooks, bookComparatorByAuthor);
-                        Log.d("Tag",allBooks.toString());
                         ba.notifyDataSetChanged();
                         Toast.makeText(MainActivity.this, R.string.mainActivitySortingByAuthor, Toast.LENGTH_SHORT).show();
                     }else {
@@ -134,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
                             allBooks.clear();
                             allBooks.addAll(dataBaseHelper.getFavouriteBooks());
                             Collections.sort(allBooks, bookComparatorByTitle);
-                            Log.d("Tag",allBooks.toString());
                             ba.notifyDataSetChanged();
                             Toast.makeText(MainActivity.this, R.string.mainActivityFilterFavourites, Toast.LENGTH_SHORT).show();
                         }else {
@@ -143,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
                                 allBooks.clear();
                                 allBooks.addAll(dataBaseHelper.getBorrowedBooks());
                                 Collections.sort(allBooks, bookComparatorByTitle);
-                                Log.d("Tag",allBooks.toString());
                                 ba.notifyDataSetChanged();
                                 Toast.makeText(MainActivity.this, R.string.mainActivityFilterLended, Toast.LENGTH_SHORT).show();
                             }

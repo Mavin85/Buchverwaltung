@@ -1,11 +1,5 @@
 package com.example.buchverwaltung;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.Group;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -18,6 +12,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -101,9 +101,6 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 groupByIsbn.setVisibility(View.GONE);
                 groupByManual.setVisibility(View.GONE);
                 addManualButton.setVisibility(View.GONE);
-                //isbn = "0735619670";
-                //isbn = "361301548X";
-                //isbn = "9789385031595";
 
                 getABookByIsbn(new Callback<BookApiResult>() {
 
@@ -156,7 +153,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     }
 
     private void handleIsbnAdding(Response<BookApiResult> response, String searchText) {
-        isbn = searchText; //muss ja sein
+        isbn = searchText;
         assert response.body() != null;
         ApiResponseBook book = response.body().getBook().get(0);
 

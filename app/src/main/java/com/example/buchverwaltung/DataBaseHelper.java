@@ -149,7 +149,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // edits a borrowing process
     public void editLending(Lending lending) {
-        Log.d("tag1","anfang");
         SQLiteDatabase db = this.getWritableDatabase();
 
         int procId = lending.getId();
@@ -161,16 +160,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put("completed", lending.getIsBack() ? 1 : 0);
         values.put("comment_borrowing", lending.getComment());
 
-        Log.d("tag1","vortry");
         try {
             db.update("Borrowing_Process", values, "borrowing_id = " + procId, null);
-            Log.d("tag1","intry");
         }
         catch(Exception e) {
             Log.e("editBorrowingProcess", e.getMessage());
-            Log.d("tag1","incatch");
         }
-        Log.d("tag1","nachtry");
     }
 
     // removes a borrowing process from the db
@@ -272,13 +267,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return newBook;
     }
-
-
-
-
-
-
-
 
 
     // returns borrowing processes for one book
