@@ -15,7 +15,7 @@
     <string name="detailLendingTextViewPlannedDate">Wähle geplantes Ende aus</string>
     <string name="mainActivityFilterFavourites" >Nur Favoriten anzeigen</string>
     <string name="mainActivitySortingByTitel">Sortierung nach Titel</string>
-    <string name="mainActivitySortingByAuthor">Sortierung nach Author</string>
+    <string name="mainActivitySortingByAuthor">Sortierung nach Autor</string>
     <string name="detailLendingEditTextActualDate">aktuelles Datum</string>
     <string name="detailLendingEditTextPlannedDate">geplant zurück</string>
     <string name="apiErrorFailure">Fehler! Bitte Internetverbindung überprüfen und neu laden.</string>
