@@ -132,4 +132,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onBackPressed() {
+        Intent iExitApp;
+        iExitApp = new Intent(Intent.ACTION_MAIN);
+        iExitApp.addCategory(Intent.CATEGORY_HOME);
+        iExitApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(iExitApp);
+    }
 }
