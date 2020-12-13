@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -257,7 +258,9 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     }
 
     private void handleManualAdding() {
-        Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_SHORT).show();
+        Toast toast = Toast.makeText(context, R.string.apiNoBookReceived, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER_VERTICAL| Gravity.CENTER_HORIZONTAL, 0, 0);
+        toast.show();
         addManualButton.setVisibility(View.VISIBLE);
 
         //show manual adding components
