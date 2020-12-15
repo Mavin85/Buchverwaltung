@@ -13,37 +13,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
+
+    private static final String DATABASE_NAME = "book.db";
+
     // Table Book
-    public static final String BOOK = "Book"; // Table name
+    private static final String BOOK = "Book"; // Table name
     // Column names
-    public static final String BOOK_ID = "book_id";
-    public static final String ISBN = "isbn";
-    public static final String TITLE = "title";
-    public static final String AUTHOR = "author";
-    public static final String FAVOURITE = "favourite";
-    public static final String COVER = "cover";
-    public static final String COMMENT_BOOK = "comment_book";
+    private static final String BOOK_ID = "book_id";
+    private static final String ISBN = "isbn";
+    private static final String TITLE = "title";
+    private static final String AUTHOR = "author";
+    private static final String FAVOURITE = "favourite";
+    private static final String COVER = "cover";
+    private static final String COMMENT_BOOK = "comment_book";
 
     // Table BorrowingProcess
-    public static final String BORROWING_PROCESS = "Borrowing_Process"; // Table name
+    private static final String LENDING = "Lending"; // Table name
     // Column names
-    public static final String BORROWING_ID = "borrowing_id";
-    public static final String BORROWER = "borrower";
-    public static final String BEGINNING = "beginning";
-    public static final String END = "ending";
-    public static final String COMPLETED = "completed";
-    public static final String COMMENT_BORROWING = "comment_borrowing";
+    private static final String LENDING_ID = "lending_id";
+    private static final String LENDER = "lender";
+    private static final String BEGINNING = "start";
+    private static final String END = "planned_end";
+    private static final String COMPLETED = "completed";
+    private static final String COMMENT_LENDING = "comment_lending";
+
+    private final SQLiteDatabase readableDb;
+    private final SQLiteDatabase writableDb;
 
     public DataBaseHelper(@Nullable Context context) {
-        super(context, "book.db", null, 1);
+        super(context, DATABASE_NAME, null, 1);
+        readableDb = this.getReadableDatabase();
+        writableDb = this.getWritableDatabase();
     }
 
     // creates the db on the first launch of the app
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableBook = "CREATE TABLE " + BOOK + " (" + BOOK_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + ISBN + " Text, " + TITLE + " Text, " + AUTHOR + " Text, " + COVER + " int, " + FAVOURITE + " int, " + COMMENT_BOOK + " Text)";
+        String createTableBook = "CREATE TABLE " + BOOK + " (" +
+                BOOK_ID + " Integer PRIMARY KEY AUTOINCREMENT, " +
+                ISBN + " Text, " +
+                TITLE + " Text, " +
+                AUTHOR + " Text, " +
+                COVER + " int, " +
+                FAVOURITE + " int, " +
+                COMMENT_BOOK + " Text)";
         db.execSQL(createTableBook);
-        String createTableBorrowingProcess = "CREATE TABLE " + BORROWING_PROCESS + " (" + BORROWING_ID + " Integer PRIMARY KEY AUTOINCREMENT, " + BOOK_ID + " int, " + BORROWER + " Text, " + BEGINNING + " Text, " + END + " Text, " + COMPLETED + " int, " + COMMENT_BORROWING + " Text)";
+        String createTableBorrowingProcess = "CREATE TABLE " + LENDING + " (" +
+                LENDING_ID + " Integer PRIMARY KEY AUTOINCREMENT, " +
+                BOOK_ID + " int, " +
+                LENDER + " Text, " +
+                BEGINNING + " Text, " +
+                END + " Text, " +
+                COMPLETED + " int, " +
+                COMMENT_LENDING + " Text)";
         db.execSQL(createTableBorrowingProcess);
     }
 
@@ -51,18 +73,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // currently all the stored data will be lost after upgrade
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.e("Upgrade", "Updating tables");
-
         db.execSQL("DROP TABLE IF EXISTS " + BOOK);
-        db.execSQL("DROP TABLE IF EXISTS " + BORROWING_PROCESS);
+        db.execSQL("DROP TABLE IF EXISTS " + LENDING);
         onCreate(db);
     }
 
-    // write
+    // converter
 
-    // adds a book to the db
-    public void addBook(Book book) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    // get book from cursor
+    private Book getBookObject(Cursor cur) {
+        return new Book(
+                cur.getInt(cur.getColumnIndex(BOOK_ID)),
+                cur.getString(cur.getColumnIndex(ISBN)),
+                cur.getString(cur.getColumnIndex(TITLE)),
+                cur.getString(cur.getColumnIndex(AUTHOR)),
+                cur.getInt(cur.getColumnIndex(FAVOURITE)) == 1,
+                cur.getInt(cur.getColumnIndex(COVER)),
+                cur.getString(cur.getColumnIndex(COMMENT_BOOK)));
+    }
+
+    // get content values from book
+    private ContentValues getBookContentValues(Book book) {
         ContentValues cv = new ContentValues();
         cv.put(ISBN, book.getIsbn());
         cv.put(TITLE, book.getTitle());
@@ -70,266 +101,203 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(FAVOURITE, book.isFavourite() ? 1 : 0);
         cv.put(COVER, book.getCoverInt());
         cv.put(COMMENT_BOOK, book.getComment());
+        return cv;
+    }
 
+    // get lending from cursor
+    private Lending getLendingObject(Cursor cur) {
+        return new Lending(
+                cur.getInt(cur.getColumnIndex(LENDING_ID)),
+                cur.getInt(cur.getColumnIndex(BOOK_ID)),
+                cur.getString(cur.getColumnIndex(LENDER)),
+                cur.getString(cur.getColumnIndex(BEGINNING)),
+                cur.getString(cur.getColumnIndex(END)),
+                cur.getInt(cur.getColumnIndex(COMPLETED)) == 1,
+                cur.getString(cur.getColumnIndex(COMMENT_LENDING)));
+    }
+
+    // get content values from lending
+    private ContentValues getLendingContentValues(Lending lending) {
+        ContentValues cv = new ContentValues();
+        cv.put(BOOK_ID, lending.getBook_id());
+        cv.put(LENDER, lending.getLender());
+        cv.put(BEGINNING, lending.getStart());
+        cv.put(END, lending.getPlanned_end());
+        cv.put(COMPLETED, lending.getIsBack() ? 1 : 0);
+        cv.put(COMMENT_LENDING, lending.getComment());
+        return cv;
+    }
+
+
+    // write
+
+    // adds a book to the db
+    public void addBook(Book book) {
+        ContentValues cv = getBookContentValues(book);
         try {
-            db.insert(BOOK, null, cv);
+            writableDb.insert(BOOK, null, cv);
         }
         catch(Exception e) {
-            Log.e("addBook", e.getMessage());
+            Log.e("db", "addBook: " + e.getMessage());
         }
     }
 
     // edits a book
     public void editBook(Book book) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
         int bookId = book.getId();
-        ContentValues values = new ContentValues();
-        values.put("isbn", book.getIsbn());
-        values.put("title", book.getTitle());
-        values.put("author", book.getAuthor());
-        values.put("cover", book.getCoverInt());
-        values.put("favourite", book.isFavourite() ? 1 : 0);
-        values.put("comment_book", book.getComment());
-
+        ContentValues cv = getBookContentValues(book);
         try {
-            db.update("Book", values, "book_id = " + bookId, null);
+            writableDb.update(BOOK, cv, BOOK_ID + " = " + bookId, null);
         }
         catch(Exception e) {
-            Log.e("editBook", e.getMessage());
+            Log.e("db", "editBook: " + e.getMessage());
         }
     }
 
     // removes a book from the db
     public void remBook(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        String[] selectionArgs = new String[]{Integer.toString(id)};
 
-        // first delete all borrowing processes of the book
-        Cursor cursor = db.rawQuery("SELECT * FROM BORROWING_PROCESS WHERE book_id = " + id + " ORDER BY borrowing_id desc;", null);
+        // first delete all lendings of the book
+        String query = "SELECT * FROM " + LENDING + " WHERE " + BOOK_ID + " = ? ORDER BY " + LENDING_ID + " desc;";
+        Cursor cur = writableDb.rawQuery(query, selectionArgs);
         try {
-            if(cursor.moveToFirst()) {
+            if(cur.moveToFirst()) {
                 do {
-                    remLending(cursor.getInt(cursor.getColumnIndex("borrowing_id")));
-                } while (cursor.moveToNext());
+                    remLending(cur.getInt(cur.getColumnIndex(LENDING_ID)));
+                } while (cur.moveToNext());
             }
         }
         catch(Exception e) {
-            Log.e("remBook,remBoPo", e.getMessage());
+            Log.e("db", "remBook,remLending: " + e.getMessage());
         }
-        cursor.close();
+        cur.close();
 
         // delete the book
         try {
-            db.delete("Book", "book_id = " + id, null);
+            writableDb.delete(BOOK, BOOK_ID + " = ?", selectionArgs);
         }
         catch(Exception e) {
-            Log.e("remBook", e.getMessage());
+            Log.e("db", "remBook: " + e.getMessage());
         }
     }
 
     // adds a lending to the db
     public void addLending(Lending lending) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        cv.put(BOOK_ID, lending.getBook_id());
-        cv.put(BORROWER, lending.getLender());
-        cv.put(BEGINNING, lending.getStart());
-        cv.put(END, lending.getPlanned_end());
-        cv.put(COMPLETED, lending.getIsBack() ? 1 : 0);
-        cv.put(COMMENT_BORROWING, lending.getComment());
-
+        ContentValues cv = getLendingContentValues(lending);
         try {
-            db.insert(BORROWING_PROCESS, null, cv);
+            writableDb.insert(LENDING, null, cv);
         }
         catch(Exception e) {
-            Log.e("addBorrowingProcess", e.getMessage());
+            Log.e("db", "addLending: " + e.getMessage());
         }
     }
 
-    // edits a borrowing process
+    // edits a lending
     public void editLending(Lending lending) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        int procId = lending.getId();
-        ContentValues values = new ContentValues();
-        values.put("book_id",lending.getBook_id());
-        values.put("borrower",lending.getLender());
-        values.put("beginning", lending.getStart());
-        values.put("ending", lending.getPlanned_end());
-        values.put("completed", lending.getIsBack() ? 1 : 0);
-        values.put("comment_borrowing", lending.getComment());
-
+        int lendingId = lending.getId();
+        ContentValues cv = getLendingContentValues(lending);
         try {
-            db.update("Borrowing_Process", values, "borrowing_id = " + procId, null);
+            writableDb.update(LENDING, cv, LENDING_ID + " = " + lendingId, null);
         }
         catch(Exception e) {
-            Log.e("editBorrowingProcess", e.getMessage());
+            Log.e("db", "editLending: " + e.getMessage());
         }
     }
 
-    // removes a borrowing process from the db
+    // removes a lending from the db
     public void remLending(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
+        String[] selectionArgs = new String[]{Integer.toString(id)};
         try {
-            db.delete(BORROWING_PROCESS, "borrowing_id = " + id, null);
+            writableDb.delete(LENDING, LENDING_ID + " = ?", selectionArgs);
         }
         catch(Exception e) {
-            Log.e("remBorrowingProcess", e.getMessage());
+            Log.e("db", "remLending: " + e.getMessage());
         }
     }
+
 
     // read
 
     // returns a list of books that are results of the query
-    public List<Book> getBooks(String bookQuery) {
+    public List<Book> getBooks(String bookQuery, String[] selectionArgs) {
         List<Book> bookList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(bookQuery, null);
-
+        Cursor cur = readableDb.rawQuery(bookQuery, selectionArgs);
 
         try {
-            if(cursor.moveToFirst()) {
+            if(cur.moveToFirst()) {
                 do {
-                    int bookId = cursor.getInt(cursor.getColumnIndex("book_id"));
-                    String bookIsbn = cursor.getString(cursor.getColumnIndex("isbn"));
-                    String bookTitle = cursor.getString(cursor.getColumnIndex("title"));
-                    String bookAuthor = cursor.getString(cursor.getColumnIndex("author"));
-                    boolean bookFavourite = cursor.getInt(cursor.getColumnIndex("favourite")) == 1;
-                    int bookCover = cursor.getInt(cursor.getColumnIndex("cover"));
-                    String bookComment = cursor.getString(cursor.getColumnIndex("comment_book"));
-
-                    Book newBook = new Book(bookId,bookIsbn,bookTitle,bookAuthor,bookFavourite,bookCover,bookComment);
-                    bookList.add(newBook);
-                } while (cursor.moveToNext());
+                    bookList.add(getBookObject(cur));
+                } while (cur.moveToNext());
             }
         }
         catch(Exception e) {
-            Log.e("getBooks: " + bookQuery, e.getMessage());
+            Log.e("db", "getBooks: " + e.getMessage());
         }
 
-        cursor.close();
         return bookList;
     }
 
-    // returns one book
+    // returns one book by id
     public Book getBook(int bookId) {
-        return getBooks("SELECT * FROM Book WHERE book_id = " + bookId + ";").get(0);
+        String query = "SELECT * FROM " + BOOK + " WHERE " + BOOK_ID + " = ?;";
+        String[] selectionArgs = new String[]{Integer.toString(bookId)};
+        return getBooks(query, selectionArgs).get(0);
+    }
+
+    // returns one book by title
+    public Book getBookByTitle(String title) {
+        String query = "SELECT * FROM " + BOOK + " WHERE " + TITLE + " = ?";
+        String[] selectionArgs = new String[] {title};
+        return getBooks(query, selectionArgs).get(0);
     }
 
     // returns all saved books
     public List<Book> getAllBooks() {
-        return getBooks("SELECT * FROM " + BOOK);
+        return getBooks("SELECT * FROM " + BOOK, null);
     }
 
     // returns favourite books
     public List<Book> getFavouriteBooks() {
-        return getBooks("SELECT * FROM Book WHERE favourite = 1;");
+        return getBooks("SELECT * FROM " + BOOK + " WHERE " + FAVOURITE + " = 1;", null);
     }
 
-    // returns borrowed books
-    public List<Book> getBorrowedBooks() {
-        return getBooks("SELECT * FROM Borrowing_Process b LEFT JOIN Book bo ON bo.book_id = b.book_id where completed = 0;");
+    // returns lended books
+    public List<Book> getLendedBooks() {
+        return getBooks("SELECT * FROM " + LENDING + " l LEFT JOIN " + BOOK + " b ON b." + BOOK_ID + " = l." + BOOK_ID + " WHERE " + COMPLETED + " = 0;", null);
     }
 
-    public Book getBookByTitle(String title) {
-        String sql = "SELECT * FROM Book WHERE title = ?";
-        String[] selectionArgs = new String[] {
-                title
-        };
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(sql,selectionArgs);
-        cursor.moveToFirst();
-
-        Book newBook = null;
-        try {
-            if(cursor.moveToFirst()) {
-                do {
-                    int bookId = cursor.getInt(cursor.getColumnIndex("book_id"));
-                    String bookIsbn = cursor.getString(cursor.getColumnIndex("isbn"));
-                    String bookTitle = cursor.getString(cursor.getColumnIndex("title"));
-                    String bookAuthor = cursor.getString(cursor.getColumnIndex("author"));
-                    boolean bookFavourite = cursor.getInt(cursor.getColumnIndex("favourite")) == 1;
-                    int bookCover = cursor.getInt(cursor.getColumnIndex("cover"));
-                    String bookComment = cursor.getString(cursor.getColumnIndex("comment_book"));
-
-                    newBook = new Book(bookId,bookIsbn,bookTitle,bookAuthor,bookFavourite,bookCover,bookComment);
-
-                } while (cursor.moveToNext());
-            }
-        }
-        catch(Exception e) {
-            Log.e("getBooks: " + "sql", e.getMessage());
-        }
-
-        cursor.close();
-        return newBook;
-    }
-
-
-    // returns borrowing processes for one book
-    public List<Lending> getLendings(int bookId) {
-        List<Lending> lendingList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM BORROWING_PROCESS WHERE book_id = " + bookId + " ORDER BY borrowing_id desc;", null);
-
-        try {
-            if(cursor.moveToFirst()) {
-                do {
-                    int borrowId = cursor.getInt(cursor.getColumnIndex("borrowing_id"));
-                    String borrower = cursor.getString(cursor.getColumnIndex("borrower"));
-                    String beginning = cursor.getString(cursor.getColumnIndex("beginning"));
-                    String ending = cursor.getString(cursor.getColumnIndex("ending"));
-                    boolean completed = cursor.getInt(cursor.getColumnIndex("completed")) == 1;
-                    String comment_borrowing = cursor.getString(cursor.getColumnIndex("comment_borrowing"));
-
-                    Lending lending = new Lending(borrowId, bookId, borrower, beginning, ending, completed, comment_borrowing);
-                    lendingList.add(lending);
-                } while (cursor.moveToNext());
-            }
-        }
-        catch(Exception e) {
-            Log.e("getBorrowProcesses", e.getMessage());
-        }
-
-        cursor.close();
-        return lendingList;
-    }
 
     // returns a list of lendings that are results of the query
-    public List<Lending> getLendings(String lendingQuery) {
+    public List<Lending> getLendings(String lendingQuery, String[] selectionArgs) {
         List<Lending> lendingList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(lendingQuery, null);
+        Cursor cur = readableDb.rawQuery(lendingQuery, selectionArgs);
 
         try {
-            if(cursor.moveToFirst()) {
+            if(cur.moveToFirst()) {
                 do {
-                    int borrowId = cursor.getInt(cursor.getColumnIndex("borrowing_id"));
-                    int bookId = cursor.getInt(cursor.getColumnIndex("book_id"));
-                    String borrower = cursor.getString(cursor.getColumnIndex("borrower"));
-                    String beginning = cursor.getString(cursor.getColumnIndex("beginning"));
-                    String ending = cursor.getString(cursor.getColumnIndex("ending"));
-                    boolean completed = cursor.getInt(cursor.getColumnIndex("completed")) == 1;
-                    String comment_borrowing = cursor.getString(cursor.getColumnIndex("comment_borrowing"));
-
-                    Lending lending = new Lending(borrowId, bookId, borrower, beginning, ending, completed, comment_borrowing);
-                    lendingList.add(lending);
-                } while (cursor.moveToNext());
+                    lendingList.add(getLendingObject(cur));
+                } while (cur.moveToNext());
             }
         }
         catch(Exception e) {
-            Log.e("getLendings: " + lendingQuery, e.getMessage());
+            Log.e("db", "getLendings: " + e.getMessage());
         }
 
-        cursor.close();
         return lendingList;
     }
 
-    // returns one lending
+    // returns one lending by id
     public Lending getLending(int lendingId) {
-        return getLendings("SELECT * FROM Borrowing_Process WHERE borrowing_id = " + lendingId + ";").get(0);
+        String query = "SELECT * FROM " + LENDING + " WHERE " + LENDING_ID + " = ?;";
+        String[] selectionArgs = new String[]{Integer.toString(lendingId)};
+        return  getLendings(query, selectionArgs).get(0);
+    }
+
+    // returns lendings for one book
+    public List<Lending> getLendingsForBook(int bookId) {
+        String query = "SELECT * FROM " + LENDING + " WHERE " + BOOK_ID + " = ? ORDER BY " + LENDING_ID + " desc;";
+        String[] selectionArgs = new String[]{Integer.toString(bookId)};
+        return  getLendings(query, selectionArgs);
     }
 }

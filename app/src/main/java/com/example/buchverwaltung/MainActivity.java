@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                             if(filterCount == 3) {  //sorting by favourites
                                 filterCount = 0;
                                 allBooks.clear();
-                                allBooks.addAll(dataBaseHelper.getBorrowedBooks());
+                                allBooks.addAll(dataBaseHelper.getLendedBooks());
                                 Collections.sort(allBooks, bookComparatorByTitle);
                                 ba.notifyDataSetChanged();
                                 Toast.makeText(MainActivity.this, R.string.mainActivityFilterLended, Toast.LENGTH_SHORT).show();

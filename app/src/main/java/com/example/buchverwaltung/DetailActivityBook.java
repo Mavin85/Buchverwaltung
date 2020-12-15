@@ -114,7 +114,7 @@ public class DetailActivityBook extends AppCompatActivity {
             }
         });
 
-        lendingList = dataBaseHelper.getLendings(b.getId());
+        lendingList = dataBaseHelper.getLendingsForBook(b.getId());
 
         // filling RecyclerView with sorted by title
         lendingListView = (RecyclerView) findViewById(R.id.detailBookRecyclerViewLendings);
