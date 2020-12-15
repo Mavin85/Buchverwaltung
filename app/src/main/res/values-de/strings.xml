@@ -31,5 +31,6 @@
     <string name="noTitleReceived">Kein Titel</string>
     <string name="noAuthorReceived">Kein Autor</string>
     <string name="mainActivityFilterLended" >Nur ausgeliehene anzeigen</string>
-    <string name="detailBookAddingSearchHint">Suche nach Titel oder ISBN</string>string>
+    <string name="detailBookAddingSearchHint">Suche nach Titel oder ISBN</string>
+    <string name="app_description" >Dies ist das Hauptfenster der Buchverwaltungsapp. Neue Bücher können über das Symbol rechts oben hinzugefügt werden.</string>string>
 </resources>

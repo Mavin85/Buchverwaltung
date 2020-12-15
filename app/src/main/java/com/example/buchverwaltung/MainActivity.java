@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,16 +17,16 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     Book bookTest;
-    Lending lendingTestFalse;
-    Lending lendingTestTrue;
+    Lending lendingTestFalse, lendingTestTrue;
 
     List<Book> allBooks;
     DataBaseHelper dataBaseHelper;
     BookAdapter ba;
 
     RecyclerView bookListView;
-    ImageView addBookView;
-    ImageView filterRecyclerView;
+    ImageView addBookView, filterRecyclerView;
+    TextView descriptionView;
+
     private int filterCount;
 
     //Definitions of Sorting Functions for the RecyclerView
@@ -64,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
         //dataBaseHelper.addBook(bookTest);
 
         allBooks = dataBaseHelper.getAllBooks();
+
+        descriptionView = findViewById(R.id.mainDescription);
+        descriptionView.setVisibility(View.GONE);
+        // show description only if there is no book
+        if(allBooks.isEmpty()) {
+            descriptionView.setVisibility(View.VISIBLE);
+        }
 
         int coverInt = R.drawable.bookexamplecover;
 

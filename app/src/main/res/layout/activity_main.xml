@@ -49,6 +49,21 @@
             android:clickable="true" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/mainDescription"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_weight="1"
+        android:text="@string/app_description"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainLayoutHeader"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:text="Beschreibung"
+        />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainBooksRecyclerView"

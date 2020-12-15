@@ -31,5 +31,6 @@
     <string name="noTitleReceived">No Title</string>
     <string name="noAuthorReceived">No Author</string>
     <string name="mainActivityFilterLended" >Show lended only</string>
-    <string name="detailBookAddingSearchHint">Search for title or isbn</string>string>
+    <string name="detailBookAddingSearchHint">Search for title or isbn</string>
+    <string name="app_description" >This is the main window of the book management app. New books can be added using the symbol at the top right.</string>string>
 </resources>
