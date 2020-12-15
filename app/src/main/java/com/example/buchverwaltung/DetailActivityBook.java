@@ -158,6 +158,10 @@ public class DetailActivityBook extends AppCompatActivity {
         });
 
         newLendingButton = findViewById(R.id.detailBookButtonLending);
+        // only show button when no lending is active
+        if(!dataBaseHelper.getActiveLendingsForBook(b.getId()).isEmpty()) {
+            newLendingButton.setVisibility(View.GONE);
+        }
         newLendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

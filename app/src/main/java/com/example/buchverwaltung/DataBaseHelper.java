@@ -300,4 +300,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String[] selectionArgs = new String[]{Integer.toString(bookId)};
         return  getLendings(query, selectionArgs);
     }
+
+    // returns only active lendings for one book
+    public List<Lending> getActiveLendingsForBook(int bookId) {
+        String query = "SELECT * FROM " + LENDING + " WHERE " + BOOK_ID + " = ? AND " + COMPLETED + " = 0;";
+        String[] selectionArgs = new String[]{Integer.toString(bookId)};
+        return  getLendings(query, selectionArgs);
+    }
 }
