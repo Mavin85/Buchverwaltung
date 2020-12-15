@@ -33,4 +33,10 @@
     <string name="mainActivityFilterLended" >Nur ausgeliehene anzeigen</string>
     <string name="detailBookAddingSearchHint">Suche nach Titel oder ISBN</string>
     <string name="app_description" >Dies ist das Hauptfenster der Buchverwaltungsapp. Neue Bücher können über das Symbol rechts oben hinzugefügt werden.</string>string>
+    <string-array name="filter_array">
+        <item>Titel</item>
+        <item>Autor</item>
+        <item>Favorit</item>
+        <item>Verliehen</item>
+    </string-array>
 </resources>

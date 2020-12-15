@@ -33,4 +33,10 @@
     <string name="mainActivityFilterLended" >Show lended only</string>
     <string name="detailBookAddingSearchHint">Search for title or isbn</string>
     <string name="app_description" >This is the main window of the book management app. New books can be added using the symbol at the top right.</string>string>
+    <string-array name="filter_array">
+        <item>Title</item>
+        <item>Author</item>
+        <item>Favorite</item>
+        <item>Lended</item>
+    </string-array>
 </resources>
