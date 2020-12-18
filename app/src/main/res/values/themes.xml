@@ -45,4 +45,10 @@
         <item name="colorControlNormal">@color/colorRatingInactive</item>
 
     </style>
+
+    <style name="spinnerTheme">
+
+        <item name="android:textColor">@color/colorTextIcons</item>
+
+    </style>
 </resources>

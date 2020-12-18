@@ -23,9 +23,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     DataBaseHelper dataBaseHelper;
     BookAdapter ba;
     RecyclerView bookListView;
-    ImageView addBookView;
+    ImageView addBookView, welcomeView;
     TextView descriptionView;
     Spinner filterSpinner;
+    View backgroundView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +42,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         filterSpinner = (Spinner) findViewById(R.id.mainFilterSpinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.filter_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.filter_array, R.layout.item_spinner);
         // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         // Apply the adapter to the spinner
         filterSpinner.setAdapter(adapter);
         filterSpinner.setOnItemSelectedListener(this);
 
         // show description (only if there is no book)
         descriptionView = findViewById(R.id.mainDescription);
+        welcomeView = findViewById(R.id.main_welcomeSign);
+        backgroundView = findViewById(R.id.mainBackgroundView);
         descriptionView.setVisibility(View.GONE);
+        welcomeView.setVisibility(View.GONE);
+        backgroundView.setVisibility(View.GONE);
         if(allBooks.isEmpty()) {
             descriptionView.setVisibility(View.VISIBLE);
+            welcomeView.setVisibility(View.VISIBLE);
+            backgroundView.setVisibility(View.VISIBLE);
         }
 
         // filling RecyclerView with sorted by title
