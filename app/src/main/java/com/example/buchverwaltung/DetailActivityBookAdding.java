@@ -204,7 +204,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 dataBaseHelper.addBook(theBook);
                 if (theBook.getCoverInt() == 1) {
                     // store the cover
-                    Picasso.get().load(theBook.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, dataBaseHelper.getBookByTitle(theBook.getTitle()).getId() + "_cover.jpeg"));
+                    Picasso.get().load(theBook.getCoverString()).error(R.drawable.ic_emptythumbnail).into(DetailActivityBookAdding.picassoImageTarget(context, dataBaseHelper.getBookByTitle(theBook.getTitle()).getId() + "_cover.jpeg"));
                 }
 
                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this, MainActivity.class);

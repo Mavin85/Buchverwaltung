@@ -1,5 +1,6 @@
 package com.example.buchverwaltung;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DetailActivityLending extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class DetailActivityLending extends AppCompatActivity {
     Lending lending;
     DataBaseHelper dataBaseHelper;
     Context context;
+    Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +121,11 @@ public class DetailActivityLending extends AppCompatActivity {
     private void createLending(Intent i) {
         deleteButton.setVisibility(Button.GONE);
         isBackButton.setVisibility(Button.GONE);
+
+        //preview the actual date
+        calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        selectActualDate.setText(dateFormat.format(calendar.getTime()));
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
