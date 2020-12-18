@@ -6,7 +6,7 @@
     <string name="detailBookButtonDelete">löschen</string>
     <string name="detailBookButtonLending">verleihen</string>
     <string name="detailBooksLendingPlannedTimeIdentifier">geplant zurück:</string>
-    <string name="detailLendingButtonGiveBack">zurückgegeben</string>
+    <string name="detailLendingButtonGiveBack">zurück</string>
     <string name="detailLendingButtonDelete">löschen</string>
     <string name="detailLendingButtonConfirm">bestätigen</string>
     <string name="detailLendingEditTextLender">Name</string>
@@ -23,7 +23,7 @@
     <string name="apiNoBookReceived" >Keine Bücher gefunden!</string>
     <string name="dialogDeleteBook" >Möchten Sie das Buch löschen?</string>
     <string name="dialogDeleteLending">Möchten Sie den Ausleihvorgang löschen?</string>
-    <string name="detailLendingButtonAddManual">Manuell einfügen</string>
+    <string name="detailLendingButtonAddManual">Manuell</string>
     <string name="detailLendingEditTextTitle">Titel</string>
     <string name="detailLendingEditTextAuthor">Autor</string>
     <string name="dialogAddBook">Möchten Sie das Buch hinzufügen?</string>

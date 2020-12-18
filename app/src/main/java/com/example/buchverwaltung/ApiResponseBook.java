@@ -11,13 +11,6 @@ public class ApiResponseBook {
         this.apiDetails = apiDetails;
     }
 
-    @Override
-    public String toString() {
-        return "ApiResponseBook{" +
-                ", apiDetails=" + apiDetails +
-                '}';
-    }
-
     public ApiDetails getApiDetails() {
         return apiDetails;
     }

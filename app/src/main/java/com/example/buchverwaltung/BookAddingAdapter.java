@@ -59,16 +59,17 @@ public class BookAddingAdapter extends RecyclerView.Adapter<BookAddingAdapter.Bo
                                     Picasso.get().load(b.getCoverString()).into(DetailActivityBookAdding.picassoImageTarget(context, dataBaseHelper.getBookByTitle(b.getTitle()).getId() + "_cover.jpeg"));
                                 }
                                 Intent i = new Intent(context, MainActivity.class);
-                                //context.startActivity(i);
                                 parentActivity.startActivity(i);
                             }})
                         .setNegativeButton(android.R.string.cancel, null).show();
             }
         });
 
+        // load default cover
         if (b.getCoverInt() == 0) {
             holder.b_cover.setImageResource(R.drawable.bookexamplecover);
         }
+        // load correct cover
         else {
             Picasso.get().load(b.getCoverString()).into(holder.b_cover);
         }

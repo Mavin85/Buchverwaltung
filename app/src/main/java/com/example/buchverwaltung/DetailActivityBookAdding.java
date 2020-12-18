@@ -47,15 +47,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
     Button confirmButton, addManualButton;
     Group groupByIsbn,groupByTitle,groupByManual;
     DataBaseHelper dataBaseHelper;
-
     String isbn,thumbnailPath;
-
     Book theBook;
     ApiResponseBook apiResponseBook;
     List<ApiResponseBook> apiBookList;
     List<Book> normalBookList = new ArrayList<>();
     Context context;
-
     BookAddingAdapter ba;
 
     @Override
@@ -106,19 +103,23 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 getABookByIsbn(new Callback<BookApiResult>() {
 
                     @Override
+                    // occurs when Api responded for ISBN-Request
                     public void onResponse(@NotNull Call<BookApiResult> call, @NotNull Response<BookApiResult> response) {
                         searchIsbnView.clearFocus();
-                        // check if there is a book in the answer
                         assert response.body() != null;
+
+                        // occurs when Api response for ISBN-Request is empty
                         if(response.body().getTotalItems().equals("0")) {
 
                             getBooksByTitle(new Callback<BookApiResult>() {
 
                                 @Override
+                                // occurs when Api responded for Title-Request
                                 public void onResponse(@NotNull Call<BookApiResult> call, Response<BookApiResult> response) {
                                     searchIsbnView.clearFocus();
-                                    // check if there is a book in the answer
                                     assert response.body() != null;
+
+                                    // occurs when Api response for Title-Request is empty
                                     if(response.body().getTotalItems().equals("0")) {
                                         handleManualAdding();
                                         return;
@@ -127,6 +128,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                                 }
 
                                 @Override
+                                // occurs when Api not responded for Title-Request
                                 public void onFailure(@NotNull Call<BookApiResult> call, @NotNull Throwable t) {
                                     searchIsbnView.clearFocus();
                                     Toast.makeText(context, R.string.apiErrorFailure, Toast.LENGTH_LONG).show();
@@ -138,6 +140,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                     }
 
                     @Override
+                    // occurs when Api not responded for ISBN-Request
                     public void onFailure(@NotNull Call<BookApiResult> call, Throwable t) {
                         searchIsbnView.clearFocus();
                         Toast.makeText(context, R.string.apiErrorFailure, Toast.LENGTH_LONG).show();
@@ -193,9 +196,6 @@ public class DetailActivityBookAdding extends AppCompatActivity {
         titleView.setText(theBook.getTitle());
         authorView.setText(theBook.getAuthor());
 
-        // show confirm button
-        //confirmButton.setVisibility(View.VISIBLE);
-
         // add book to the app
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,7 +208,6 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                 }
 
                 Intent iBacktoMain = new Intent(DetailActivityBookAdding.this, MainActivity.class);
-
                 startActivity(iBacktoMain);
             }
         });
@@ -241,10 +240,7 @@ public class DetailActivityBookAdding extends AppCompatActivity {
             theBook = new Book(apiResponseBook.getApiDetails().getIndustryIdentifiers().get(0).getIsbn(), apiResponseBook.getApiDetails().getTitle(), apiResponseBook.getApiDetails().getAuthors().get(0), false, 0, "");
 
             //built the correct thumbnail url (https instead of http)
-            if(apiResponseBook.getApiDetails().getImageLinks() == null) {
-
-            }
-            else{
+            if(apiResponseBook.getApiDetails().getImageLinks() != null) {
                 thumbnailPath = apiResponseBook.getApiDetails().getImageLinks().getThumbnail() + ".jpg";
                 String[] parts = thumbnailPath.split(":");
                 thumbnailPath = parts[0] + "s:" + parts[1];
@@ -253,7 +249,6 @@ public class DetailActivityBookAdding extends AppCompatActivity {
             }
             normalBookList.add(theBook);
         }
-
         ba.notifyDataSetChanged();
     }
 
@@ -356,15 +351,12 @@ public class DetailActivityBookAdding extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-                        Log.i("image", "image saved to >>>" + myImageFile.getAbsolutePath());
-
                     }
                 }).start();
             }
 
             @Override
             public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
             }
 
             @Override

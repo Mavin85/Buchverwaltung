@@ -296,7 +296,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // returns lendings for one book
     public List<Lending> getLendingsForBook(int bookId) {
-        String query = "SELECT * FROM " + LENDING + " WHERE " + BOOK_ID + " = ? ORDER BY " + LENDING_ID + " desc;";
+        String query = "SELECT * FROM " + LENDING + " WHERE " + BOOK_ID + " = ? ORDER BY " + LENDING_ID + " asc;";
         String[] selectionArgs = new String[]{Integer.toString(bookId)};
         return  getLendings(query, selectionArgs);
     }

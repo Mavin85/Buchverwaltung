@@ -19,11 +19,11 @@ import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
     List<Book> bookList;
-    Context con;
+    Context context;
 
-    public BookAdapter(List<Book> bookList, Context con) {
+    public BookAdapter(List<Book> bookList, Context context) {
         this.bookList = bookList;
-        this.con = con;
+        this.context = context;
     }
 
     @NonNull
@@ -40,21 +40,19 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(con, DetailActivityBook.class);
+                Intent i = new Intent(context, DetailActivityBook.class);
                 i.putExtra("id", b.getId());
-                con.startActivity(i);
+                context.startActivity(i);
             }
         });
 
+        // load default cover
         if(b.getCoverInt() == 0) {
             holder.b_cover.setImageResource(R.drawable.bookexamplecover);
         }
         else {
-            // load cover
-            ContextWrapper cw = new ContextWrapper(con);
+            ContextWrapper cw = new ContextWrapper(context);
             File directory = cw.getDir("coverDir", Context.MODE_PRIVATE);
-            // actually better, but not because not every book has an isbn
-            //File myImageFile = new File(directory, b.getIsbn() + "_cover.jpeg");
             File myImageFile = new File(directory, b.getId() + "_cover.jpeg");
             Picasso.get().load(myImageFile).into(holder.b_cover);
         }

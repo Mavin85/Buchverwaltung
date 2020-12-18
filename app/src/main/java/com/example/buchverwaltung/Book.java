@@ -1,5 +1,7 @@
 package com.example.buchverwaltung;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Book {
 
     private int id;
@@ -28,27 +30,6 @@ public class Book {
         this.favourite = favourite;
         this.coverInt = coverInt;
         this.comment = comment;
-    }
-
-
-    // small constructor for testing
-    public Book(String title, String isbn) {
-        this.title = title;
-        this.isbn = isbn;
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", isbn='" + isbn + '\'' +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", favourite=" + favourite +
-                ", coverString='" + coverString + '\'' +
-                ", coverInt=" + coverInt +
-                ", comment='" + comment + '\'' +
-                '}';
     }
 
     public int getId() {

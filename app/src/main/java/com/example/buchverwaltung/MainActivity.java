@@ -40,12 +40,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         dataBaseHelper = new DataBaseHelper(MainActivity.this);
         allBooks = dataBaseHelper.getAllBooks();
 
+        // create the spinner
         filterSpinner = (Spinner) findViewById(R.id.mainFilterSpinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.filter_array, R.layout.item_spinner);
-        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
-        // Apply the adapter to the spinner
         filterSpinner.setAdapter(adapter);
         filterSpinner.setOnItemSelectedListener(this);
 
@@ -56,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         descriptionView.setVisibility(View.GONE);
         welcomeView.setVisibility(View.GONE);
         backgroundView.setVisibility(View.GONE);
+
         if(allBooks.isEmpty()) {
             descriptionView.setVisibility(View.VISIBLE);
             welcomeView.setVisibility(View.VISIBLE);
@@ -64,13 +63,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // filling RecyclerView with sorted by title
         bookListView = (RecyclerView) findViewById(R.id.mainBooksRecyclerView);
-        //sorting List by Title for first call of activity
+        // sorting List by Title for first call of activity
         Collections.sort(allBooks, bookComparatorByTitle);
         ba = new BookAdapter(allBooks, MainActivity.this);
         bookListView.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
         bookListView.setAdapter(ba);
 
-        //Button for adding a Book
+        // button for adding a book
         addBookView = findViewById(R.id.mainAddIcon);
         addBookView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         startActivity(iExitApp);
     }
 
-    //Definitions of Sorting Functions for the RecyclerView
+    // definitions of sorting functions for the RecyclerView
     final Comparator<Book> bookComparatorByTitle = new Comparator<Book>() {
         @Override
         public int compare(Book b1, Book b2) {
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     };
 
-    // Button for change the listsorting
+    // button for change the sorting of the list
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         allBooks.clear();

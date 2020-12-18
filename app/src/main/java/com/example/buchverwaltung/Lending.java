@@ -29,19 +29,6 @@ public class Lending {
         this.comment = comment;
     }
 
-    @Override
-    public String toString() {
-        return "Lending{" +
-                "id=" + id +
-                ", book_id=" + book_id +
-                ", lender='" + lender + '\'' +
-                ", start='" + start + '\'' +
-                ", planned_end='" + planned_end + '\'' +
-                ", isBack=" + isBack +
-                ", comment='" + comment + '\'' +
-                '}';
-    }
-
     public int getId() {
         return id;
     }

@@ -20,8 +20,6 @@ import java.util.Calendar;
 
 public class DetailActivityLending extends AppCompatActivity {
 
-    private static final String Tag = "DetailActivityLending";
-
     TextView selectPlannedEndDate, selectActualDate, nameView, commentView;
     DatePickerDialog.OnDateSetListener actualDateSetListener, plannedDateSetListener;
     Button confirmButton, deleteButton, isBackButton;

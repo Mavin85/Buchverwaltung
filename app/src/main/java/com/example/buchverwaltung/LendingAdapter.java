@@ -15,11 +15,11 @@ import java.util.List;
 
 public class LendingAdapter extends RecyclerView.Adapter<LendingAdapter.LendingViewHolder> {
     List<Lending> lendingList;
-    Context con;
+    Context context;
 
-    public LendingAdapter(List<Lending> lendingList, Context con) {
+    public LendingAdapter(List<Lending> lendingList, Context context) {
         this.lendingList = lendingList;
-        this.con = con;
+        this.context = context;
     }
 
     @NonNull
@@ -37,12 +37,11 @@ public class LendingAdapter extends RecyclerView.Adapter<LendingAdapter.LendingV
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(con, DetailActivityLending.class);
+                Intent i = new Intent(context, DetailActivityLending.class);
                 i.putExtra("lendingId", l.getId());
-                con.startActivity(i);
+                context.startActivity(i);
             }
         });
-
 
         if(l.getIsBack()) {
             holder.l_checkbox.setImageResource(R.drawable.ic_baseline_check_box_45);
@@ -51,7 +50,7 @@ public class LendingAdapter extends RecyclerView.Adapter<LendingAdapter.LendingV
         }
 
         holder.l_lender.setText(l.getLender());
-        holder.l_plannedTimeBack.setText(l.getPlanned_end().toString());
+        holder.l_plannedTimeBack.setText(l.getPlanned_end());
     }
 
     @Override

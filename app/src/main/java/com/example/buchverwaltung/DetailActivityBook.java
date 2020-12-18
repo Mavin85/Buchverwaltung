@@ -35,22 +35,11 @@ public class DetailActivityBook extends AppCompatActivity {
     EditText commentView;
     Button deleteButton, newLendingButton;
 
-
     List<Lending> lendingList;
     LendingAdapter la;
     RecyclerView lendingListView;
-
     DataBaseHelper dataBaseHelper;
-
     Book b;
-    //Definition of Sorting Functions for the RecyclerView
-    final Comparator<Lending> lendingComparatorByStart = new Comparator<Lending>() {
-        @Override
-        public int compare(Lending l1, Lending l2) {
-            return String.valueOf(l1.getId()).compareTo(String.valueOf(l2.getId()));
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +56,6 @@ public class DetailActivityBook extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(DetailActivityBook.this);
         b = dataBaseHelper.getBook(bookId);
-
 
         coverView = findViewById(R.id.detailBookCover);
         if(b.getCoverInt() == 0) {
@@ -115,16 +103,11 @@ public class DetailActivityBook extends AppCompatActivity {
         });
 
         lendingList = dataBaseHelper.getLendingsForBook(b.getId());
-
-        // filling RecyclerView with sorted by title
         lendingListView = (RecyclerView) findViewById(R.id.detailBookRecyclerViewLendings);
-        // sorting List by Title for first call of activity
-        Collections.sort(lendingList, lendingComparatorByStart);
         la = new LendingAdapter(lendingList,this);
         lendingListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         lendingListView.setAdapter(la);
 
-        // delete button
         deleteButton = findViewById(R.id.detailBookButtonDelete);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +119,7 @@ public class DetailActivityBook extends AppCompatActivity {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // delete the cover
-                                // exapmle path: /data/data/com.example.buchverwaltung/app_coverDir/0735619670_cover.jpeg
+                                // exapmle path: /data/data/com.example.buchverwaltung/app_coverDir/3_cover.jpeg
                                 String baseDir = DetailActivityBook.this.getFilesDir().getPath().replace("files", "");
                                 String coverDir = baseDir + "app_coverDir/" + b.getId() + "_cover.jpeg";
                                 File file = new File(coverDir);
